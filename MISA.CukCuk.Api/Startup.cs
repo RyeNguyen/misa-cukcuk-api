@@ -37,6 +37,18 @@ namespace MISA.CukCuk.Api
             {
                 jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("VueCorsPolicy", builder =>
+                {
+                    builder
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials()
+                      .WithOrigins("http://localhost:8080");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +60,8 @@ namespace MISA.CukCuk.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MISA.CukCuk.Api v1"));
             }
+
+            app.UseCors("VueCorsPolicy");
 
             app.UseHttpsRedirection();
 

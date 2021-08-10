@@ -137,7 +137,7 @@ namespace MISA.CukCuk.Api.Controllers
 
         #region Sửa thông tin khách hàng 
         [HttpPut("{CustomerId}")]
-        public IActionResult updateCustomer(Guid customerId, Customer customer)
+        public IActionResult UpdateCustomer(Guid customerId, Customer customer)
         {
             //Khai báo dynamic param:
             DynamicParameters dynamicParams = new();
@@ -171,9 +171,12 @@ namespace MISA.CukCuk.Api.Controllers
                 var propType = prop.PropertyType;
 
                 //Thêm param tương ứng với mỗi property của đối tượng:
-                dynamicParams.Add($"@{propName}", propValue);
+                if (propName != "CustomerId" && propName != "CustomerCode" && propValue != null)
+                {
+                    dynamicParams.Add($"@{propName}", propValue);
 
-                queryString += $"{propName} = @{propName},";
+                    queryString += $"{propName} = @{propName},";
+                }               
             }
 
             dynamicParams.Add("@ExistingId", customerId);

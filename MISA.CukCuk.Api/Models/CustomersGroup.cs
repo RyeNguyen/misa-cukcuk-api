@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Api.Models
 {
-    public class CustomerGroup : BaseEntity
+    public class CustomersGroup : BaseEntity
     {
         #region Property
         /// <summary>
