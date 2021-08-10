@@ -3,23 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MISA.CukCuk.Api.Models
+namespace MISA.Infrastructure.Models
 {
-    /// <summary>
-    /// Khách hàng
-    /// </summary>
     public class Customer : BaseEntity
     {
-        #region Declare
-        #endregion
-
-        #region Constructor
-        public Customer()
-        {
-
-        }
-        #endregion
-
         #region Property
         /// <summary>
         /// Khóa chính
@@ -70,9 +57,6 @@ namespace MISA.CukCuk.Api.Models
         /// Số điện thoại
         /// </summary>
         public string PhoneNumber { get; set; }
-        #endregion
-
-        #region Method
         #endregion
     }
 }

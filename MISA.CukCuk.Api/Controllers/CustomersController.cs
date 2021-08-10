@@ -8,10 +8,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Dapper;
+using MISA.ApplicationCore;
 
 namespace MISA.CukCuk.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
@@ -23,23 +24,16 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet]      
         public IActionResult GetCustomers() 
         {
-            //Truy cập vào database
-            //1. Khai báo thông tin database:
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            //2. Khởi tạo đối tượng kết nối với database:
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            //3. Lấy dữ liệu:
-            var sqlCommand = "SELECT * FROM Customer";           
-            var customers = dbConnection.Query<object>(sqlCommand);
-
-            //4. Trả về cho client:
-            var response = StatusCode(200, customers);
-            return response;
+            var customerService = new CustomerService();
+            var customers = customerService.GetCustomers();
+            try
+            {
+                return StatusCode(200, customers);
+            }
+            catch (Exception)
+            {
+                return StatusCode(404, "Không thể lấy dữ liệu khách hàng.");
+            }
         }
         #endregion
 
@@ -80,8 +74,25 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPost]
         public IActionResult InsertCustomer(Customer customer)
         {
-            customer.CustomerId = Guid.NewGuid();
+            //Validate dữ liệu:
+            //Check trường bắt buộc nhập:
+            var customerCode = customer.CustomerCode;
+            if (string.IsNullOrEmpty(customerCode))
+            {
+                var msg = new
+                {
+                    devMsg = new
+                    {
+                        fieldName = "CustomerCode",
+                        msg = "Mã khách hàng không được phép để trống."
+                    },
+                    userMsg = "Mã khách hàng không được phép để trống.",
+                    Code = 186
+                };
+                return BadRequest(msg);
+            }
 
+            //Check trùng mã:           
             //Truy cập vào database
             //1. Khai báo thông tin database:
             var connectionString = "Host = 47.241.69.179;" +
@@ -94,6 +105,16 @@ namespace MISA.CukCuk.Api.Controllers
 
             //Khai báo dynamic param:
             var dynamicParams = new DynamicParameters();
+
+            dynamicParams.Add("@dynamicCustomerCode", customerCode);
+
+            var res = $"SELECT * FROM Customer WHERE CustomerCode = @dynamicCustomerCode LIMIT 1";
+            if (dbConnection.Query(res, param: dynamicParams).Any())
+            {
+                return BadRequest("Mã đã tồn tại.");
+            }
+
+            customer.CustomerId = Guid.NewGuid();                                 
 
             //3. Thêm dữ liệu vào trong db:
             var columnsName = string.Empty;
