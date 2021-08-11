@@ -13,7 +13,11 @@ namespace MISA.Infrastructure
     public class CustomerContext
     {
         #region Method
-        //Lấy toàn bộ danh sách khách hàng:
+        /// <summary>
+        /// Lấy toàn bộ danh sách khách hàng
+        /// </summary>
+        /// <returns>Danh sách khách hàng</returns>
+        /// Author: NQMinh (10/08/2021)
         public static IEnumerable<Customer> GetCustomers()
         {
             //Kết nối tới CSDL:           
@@ -35,6 +39,10 @@ namespace MISA.Infrastructure
         //Lấy thông tin khách hàng theo ID khách hàng:
 
         //Thêm mới khách hàng:
+        public int InsertCustomer()
+        {
+            return 1;
+        }
 
         //Sửa thông tin khách hàng:
 
