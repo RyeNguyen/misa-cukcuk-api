@@ -29,11 +29,24 @@ namespace MISA.CukCuk.Api.Controllers
             var customers = customerService.GetCustomers();
             try
             {
-                return StatusCode(200, customers);
+                if (customers.Any())
+                {
+                    return StatusCode(200, customers);
+                }
+                else
+                {
+                    return NoContent();
+                }
             }
             catch (Exception)
             {
-                return StatusCode(404, "Không thể lấy dữ liệu khách hàng.");
+                var errorObj = new
+                {
+                    devMsg = Properties.Resources.messageGetCustomers_Dev,
+                    userMsg = Properties.Resources.messageGetCustomers_User,
+                    Code = MISACode.NotValid
+                };
+                return BadRequest(errorObj);
             }
         }
         #endregion
@@ -46,28 +59,31 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet("{customerId}")]
         public IActionResult GetById(Guid customerId)
-        {
-            //Truy cập vào database
-            //1. Khai báo thông tin database:
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            //2. Khởi tạo đối tượng kết nối với database:
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            //3. Lấy dữ liệu:
-            var sqlCommand = $"SELECT * FROM Customer WHERE CustomerId = @CustomerIdParam";
-
-            DynamicParameters parameters = new();
-            parameters.Add("@CustomerIdParam", customerId);
-
-            var customer = dbConnection.QueryFirstOrDefault<object>(sqlCommand, param: parameters);
-
-            //4. Trả về cho client:
-            var response = StatusCode(200, customer);
-            return response;
+        {            
+            var customerService = new CustomerService();
+            var customer = customerService.GetCustomerById(customerId);
+           
+            try
+            {
+                if (customer != null)
+                {
+                    return StatusCode(200, customer);
+                }
+                else
+                {                    
+                    return NoContent();
+                }
+            } 
+            catch (Exception)
+            {
+                var errorObj = new
+                {
+                    devMsg = Properties.Resources.messageGetCustomerById_Dev,
+                    userMsg = Properties.Resources.messageGetCustomerById_User,
+                    Code = MISACode.NotValid
+                };
+                return BadRequest(errorObj);
+            }
         }
         #endregion
 
@@ -85,7 +101,7 @@ namespace MISA.CukCuk.Api.Controllers
 
             if (insertResult.MISACode == MISACode.isValid && (int)insertResult.Data > 0)
             {
-                return Created("Thêm thông tin khách hàng thành công.", customer);
+                return Created(Properties.Resources.messageInsertSuccess, customer);
             } 
             else
             {
@@ -98,57 +114,22 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPut("{CustomerId}")]
         public IActionResult UpdateCustomer(Guid customerId, Customer customer)
         {
-            //Khai báo dynamic param:
-            DynamicParameters dynamicParams = new();
+            var customerService = new CustomerService();
+            var updateResult = customerService.UpdateCustomer(customerId, customer);
 
-            var queryString = string.Empty;
-
-            //Truy cập vào database
-            //1. Khai báo thông tin database:
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            //2. Khởi tạo đối tượng kết nối với database:
-            IDbConnection dbConnection = new MySqlConnection(connectionString);          
-
-            //3. Thêm dữ liệu vào trong db:           
-            //Đọc từng property của object:
-            var properties = customer.GetType().GetProperties();
-
-            //Duyệt từng property:
-            foreach (var prop in properties)
+            if (updateResult.MISACode == MISACode.NotValid)
             {
-                //Lấy tên của prop:
-                var propName = prop.Name;
-
-                //Lấy value của prop:
-                var propValue = prop.GetValue(customer);
-
-                //Lấy kiểu dữ liệu của prop:
-                var propType = prop.PropertyType;
-
-                //Thêm param tương ứng với mỗi property của đối tượng:
-                if (propName != "CustomerId" && propName != "CustomerCode" && propValue != null)
-                {
-                    dynamicParams.Add($"@{propName}", propValue);
-
-                    queryString += $"{propName} = @{propName},";
-                }               
+                return BadRequest(updateResult.Data);
             }
 
-            dynamicParams.Add("@ExistingId", customerId);
-
-            queryString = queryString.Remove(queryString.Length - 1, 1);
-
-            var sqlCommand = $"UPDATE Customer SET {queryString} WHERE CustomerId = @ExistingId";
-
-            var rowAffects = dbConnection.Execute(sqlCommand, param: dynamicParams);
-
-            //4. Trả về cho client:
-            var response = StatusCode(200, rowAffects);
-            return response;
+            if (updateResult.MISACode == MISACode.isValid && (int)updateResult.Data > 0)
+            {
+                return Created(Properties.Resources.messageInsertSuccess, customer);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
         #endregion
 

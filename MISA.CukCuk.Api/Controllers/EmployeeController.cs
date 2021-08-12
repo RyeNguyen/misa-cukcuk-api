@@ -14,7 +14,7 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         #region Fields
         private readonly IConfiguration _configuration;
@@ -24,7 +24,7 @@ namespace MISA.CukCuk.Api.Controllers
         private readonly IDbConnection _dbConnection;
         #endregion
 
-        public EmployeeController(IConfiguration configuration)
+        public EmployeesController(IConfiguration configuration)
         {
             _configuration = configuration;
 
