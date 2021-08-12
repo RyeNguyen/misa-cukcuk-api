@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MISA.Entity\MISA.Entity.csproj" />
     <ProjectReference Include="..\MISA.Infrastructure\MISA.Infrastructure.csproj" />
   </ItemGroup>
 

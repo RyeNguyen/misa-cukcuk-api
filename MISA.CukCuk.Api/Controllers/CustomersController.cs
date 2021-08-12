@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MISA.CukCuk.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,6 +8,8 @@ using System.Threading.Tasks;
 using MySqlConnector;
 using Dapper;
 using MISA.ApplicationCore;
+using MISA.Infrastructure.Models;
+using MISA.Entity;
 
 namespace MISA.CukCuk.Api.Controllers
 {
@@ -74,83 +75,22 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPost]
         public IActionResult InsertCustomer(Customer customer)
         {
-            //Validate dữ liệu:
-            //Check trường bắt buộc nhập:
-            var customerCode = customer.CustomerCode;
-            if (string.IsNullOrEmpty(customerCode))
+            var customerService = new CustomerService();
+            var insertResult = customerService.InsertCustomer(customer);
+
+            if (insertResult.MISACode == MISACode.NotValid)
             {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = "CustomerCode",
-                        msg = "Mã khách hàng không được phép để trống."
-                    },
-                    userMsg = "Mã khách hàng không được phép để trống.",
-                    Code = 186
-                };
-                return BadRequest(msg);
+                return BadRequest(insertResult.Data);
             }
 
-            //Check trùng mã:           
-            //Truy cập vào database
-            //1. Khai báo thông tin database:
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            //2. Khởi tạo đối tượng kết nối với database:
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            //Khai báo dynamic param:
-            var dynamicParams = new DynamicParameters();
-
-            dynamicParams.Add("@dynamicCustomerCode", customerCode);
-
-            var res = $"SELECT * FROM Customer WHERE CustomerCode = @dynamicCustomerCode LIMIT 1";
-            if (dbConnection.Query(res, param: dynamicParams).Any())
+            if (insertResult.MISACode == MISACode.isValid && (int)insertResult.Data > 0)
             {
-                return BadRequest("Mã đã tồn tại.");
-            }
-
-            customer.CustomerId = Guid.NewGuid();                                 
-
-            //3. Thêm dữ liệu vào trong db:
-            var columnsName = string.Empty;
-            var columnsParam = string.Empty;
-
-            //Đọc từng property của object:
-            var properties = customer.GetType().GetProperties();
-
-            //Duyệt từng property:
-            foreach (var prop in properties)
+                return Created("Thêm thông tin khách hàng thành công.", customer);
+            } 
+            else
             {
-                //Lấy tên của prop:
-                var propName = prop.Name;
-
-                //Lấy value của prop:
-                var propValue = prop.GetValue(customer);
-
-                //Lấy kiểu dữ liệu của prop:
-                var propType = prop.PropertyType;
-
-                //Thêm param tương ứng với mỗi property của đối tượng:
-                dynamicParams.Add($"@{propName}", propValue);
-
-                columnsName += $"{propName},";
-                columnsParam += $"@{propName},";
+                return NoContent();
             }
-
-            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-            var sqlCommand = $"INSERT INTO Customer({columnsName}) VALUES ({columnsParam})";          
-
-            var rowEffects = dbConnection.Execute(sqlCommand, param: dynamicParams);
-
-            //4. Trả về cho client:
-            var response = StatusCode(200, rowEffects);
-            return response;           
         }
         #endregion
 

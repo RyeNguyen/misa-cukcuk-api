@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MISA.ApplicationCore\MISA.ApplicationCore.csproj" />
+    <ProjectReference Include="..\MISA.Entity\MISA.Entity.csproj" />
   </ItemGroup>
 
 </Project>

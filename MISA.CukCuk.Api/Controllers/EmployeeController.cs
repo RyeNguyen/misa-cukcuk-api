@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using MISA.CukCuk.Api.Models;
+using MISA.Infrastructure.Models;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
