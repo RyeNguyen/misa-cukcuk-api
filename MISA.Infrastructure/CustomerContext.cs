@@ -116,7 +116,13 @@ namespace MISA.Infrastructure
         }
         #endregion
 
-        //Sửa thông tin khách hàng:
+        /// <summary>
+        /// Sửa thông tin khách hàng
+        /// </summary>
+        /// <param name="customerId">ID của khách hàng cần sửa</param>
+        /// <param name="customer">Dữ liệu cần sửa của khách hàng</param>
+        /// <returns>Số bản ghi bị ảnh hưởng</returns>
+        /// Author: NQMinh (12/08/2021)
         public int UpdateCustomer(Guid customerId, Customer customer)
         {
             //Khai báo dynamic param:
@@ -159,7 +165,24 @@ namespace MISA.Infrastructure
             return rowAffects;
         }
 
-        //Xóa thông tin khách hàng:
+        /// <summary>
+        /// Xóa khách hàng khỏi DB
+        /// </summary>
+        /// <param name="customerId">ID của khách hàng cần xóa</param>
+        /// <returns>Số bản ghi bị ảnh hưởng</returns>
+        /// Author: NQMinh (12/08/2021)
+        public int DeleteCustomer(Guid customerId)
+        {
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@dynamicCustomerId", customerId);
+
+            var sqlCommand = @"DELETE FROM Customer WHERE CustomerId = @dynamicCustomerId";
+
+            var rowAffects = _dbConnection.Execute(sqlCommand, param: parameters);
+
+            return rowAffects;
+        }
 
         #region Phương thức lấy thông tin khách hàng qua mã khách hàng
         /// <summary>

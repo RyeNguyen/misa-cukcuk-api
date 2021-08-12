@@ -137,20 +137,22 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpDelete("{CustomerId}")]
         public IActionResult DeleteCustomer(Guid customerId)
         {
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
+            var customerService = new CustomerService();
+            var deleteResult = customerService.DeleteCustomer(customerId);
 
-            IDbConnection dbConnection = new MySqlConnection(connectionString: connectionString);
+            if (deleteResult.MISACode == MISACode.NotValid)
+            {
+                return BadRequest(deleteResult.Data);
+            }
 
-            DynamicParameters parameters = new();
-            parameters.Add("@CustomerId", customerId);
-
-            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId = @CustomerId";
-            var rowAffects = dbConnection.Execute(sqlCommand, param: parameters);
-
-            return StatusCode(200, rowAffects);
+            if (deleteResult.MISACode == MISACode.isValid && (int)deleteResult.Data > 0)
+            {
+                return StatusCode(200, Properties.Resources.messageInsertSuccess);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
         #endregion
     }
