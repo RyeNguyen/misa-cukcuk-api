@@ -10,7 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MISA.ApplicationCore\MISA.ApplicationCore.csproj" />
     <ProjectReference Include="..\MISA.Entity\MISA.Entity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Caches\" />
   </ItemGroup>
 
 </Project>

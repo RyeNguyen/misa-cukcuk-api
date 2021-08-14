@@ -7,10 +7,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MISA.ApplicationCore.Interfaces.Repositories;
 
 namespace MISA.Infrastructure
 {
-    public class CustomerContext
+    public class CustomerRepository : ICustomerRepository
     {
         #region Fields
         //Khởi tạo kết nối với DB
@@ -23,7 +24,7 @@ namespace MISA.Infrastructure
         #endregion
 
         #region Constructor
-        public CustomerContext()
+        public CustomerRepository()
         {
             _dbConnection = new MySqlConnection(_connectionString);
         }
@@ -36,12 +37,12 @@ namespace MISA.Infrastructure
         /// </summary>
         /// <returns>Danh sách khách hàng</returns>
         /// Author: NQMinh(10/08/2021)
-        public IEnumerable<Customer> GetCustomers()
+        public List<Customer> GetCustomers()
         {                       
             var customers = _dbConnection.Query<Customer>("Proc_CustomersGetAll", commandType: CommandType.StoredProcedure);
 
             //Trả về dữ liệu:
-            return customers;
+            return customers.ToList();
         }
         #endregion
 
@@ -171,13 +172,13 @@ namespace MISA.Infrastructure
         /// <param name="customerId">ID của khách hàng cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (12/08/2021)
-        public int DeleteCustomer(Guid customerId)
+        public int DeleteCustomer(List<Guid> customerId)
         {
             var parameters = new DynamicParameters();
 
             parameters.Add("@dynamicCustomerId", customerId);
 
-            var sqlCommand = @"DELETE FROM Customer WHERE CustomerId = @dynamicCustomerId";
+            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId = @dynamicCustomerId";
 
             var rowAffects = _dbConnection.Execute(sqlCommand, param: parameters);
 
@@ -191,7 +192,7 @@ namespace MISA.Infrastructure
         /// <param name="customerCode">Mã khách hàng</param>
         /// <returns>Object khách hàng đầu tiên lấy được</returns>
         /// Author: NQMinh(12/08/2021)
-        public Customer GetCustomerbyCode(string customerCode)
+        public Customer GetCustomerByCode(string customerCode)
         {
             //Khai báo dynamic param:
             var dynamicParams = new DynamicParameters();

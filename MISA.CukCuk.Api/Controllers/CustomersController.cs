@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Dapper;
-using MISA.ApplicationCore;
 using MISA.Infrastructure.Models;
 using MISA.Entity;
+using MISA.ApplicationCore.Interfaces.Services;
 
 namespace MISA.CukCuk.Api.Controllers
 {
@@ -17,6 +17,17 @@ namespace MISA.CukCuk.Api.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
+        #region Fields
+        readonly ICustomerService _customerService;
+        #endregion
+
+        #region Constructor
+        public CustomersController(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
+        #endregion
+
         #region Lấy toàn bộ dữ liệu khách hàng
         /// <summary>
         /// Phương thức lấy toàn bộ dữ liệu khách hàng
@@ -25,8 +36,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet]      
         public IActionResult GetCustomers() 
         {
-            var customerService = new CustomerService();
-            var customers = customerService.GetCustomers();
+            var customers = _customerService.GetCustomers();
             try
             {
                 if (customers.Any())
@@ -59,9 +69,8 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet("{customerId}")]
         public IActionResult GetById(Guid customerId)
-        {            
-            var customerService = new CustomerService();
-            var customer = customerService.GetCustomerById(customerId);
+        {                        
+            var customer = _customerService.GetCustomerById(customerId);
            
             try
             {
@@ -90,9 +99,8 @@ namespace MISA.CukCuk.Api.Controllers
         #region Thêm khách hàng
         [HttpPost]
         public IActionResult InsertCustomer(Customer customer)
-        {
-            var customerService = new CustomerService();
-            var insertResult = customerService.InsertCustomer(customer);
+        {            
+            var insertResult = _customerService.InsertCustomer(customer);
 
             if (insertResult.MISACode == MISACode.NotValid)
             {
@@ -113,9 +121,8 @@ namespace MISA.CukCuk.Api.Controllers
         #region Sửa thông tin khách hàng 
         [HttpPut("{CustomerId}")]
         public IActionResult UpdateCustomer(Guid customerId, Customer customer)
-        {
-            var customerService = new CustomerService();
-            var updateResult = customerService.UpdateCustomer(customerId, customer);
+        {            
+            var updateResult = _customerService.UpdateCustomer(customerId, customer);
 
             if (updateResult.MISACode == MISACode.NotValid)
             {
@@ -135,10 +142,9 @@ namespace MISA.CukCuk.Api.Controllers
 
         #region Xóa khách hàng
         [HttpDelete("{CustomerId}")]
-        public IActionResult DeleteCustomer(Guid customerId)
-        {
-            var customerService = new CustomerService();
-            var deleteResult = customerService.DeleteCustomer(customerId);
+        public IActionResult DeleteCustomer(List<Guid> customerIds)
+        {           
+            var deleteResult = _customerService.DeleteCustomer(customerIds);
 
             if (deleteResult.MISACode == MISACode.NotValid)
             {

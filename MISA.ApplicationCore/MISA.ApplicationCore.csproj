@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MISA.Entity\MISA.Entity.csproj" />
-    <ProjectReference Include="..\MISA.Infrastructure\MISA.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +21,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
 </Project>

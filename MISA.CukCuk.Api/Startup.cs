@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MISA.ApplicationCore;
+using MISA.ApplicationCore.Interfaces.Repositories;
+using MISA.ApplicationCore.Interfaces.Services;
+using MISA.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +53,9 @@ namespace MISA.CukCuk.Api
                       .WithOrigins("http://localhost:8080");
                 });
             });
+
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
