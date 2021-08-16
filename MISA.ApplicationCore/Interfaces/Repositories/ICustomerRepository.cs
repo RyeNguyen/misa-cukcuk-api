@@ -14,7 +14,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// </summary>
         /// <returns>Danh sách khách hàng</returns>
         /// Author: NQMinh (14/08/2021)
-        List<Customer> GetCustomers();
+        List<Customer> Get();
 
         /// <summary>
         /// Lấy thông tin khách hàng qua ID
@@ -22,7 +22,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="customerId">ID của khách hàng (khóa chính)</param>
         /// <returns>Thông tin khách hàng có ID đầu vào</returns>
         /// Author: NQMinh (14/08/2021)
-        Customer GetCustomerById(Guid customerId);
+        Customer GetById(Guid customerId);
 
         /// <summary>
         /// Thêm thông tin khách hàng
@@ -30,7 +30,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="customer">Thông tin khách hàng cần thêm</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (14/08/2021)
-        int InsertCustomer(Customer customer);
+        int Insert(Customer customer);
 
         /// <summary>
         /// Cập nhật thông tin khách hàng
@@ -39,7 +39,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="customer">Thông tin khách hàng</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (14/08/2021)
-        int UpdateCustomer(Guid customerId, Customer customer);
+        int Update(Guid customerId, Customer customer);
 
         /// <summary>
         /// Xóa khách hàng
@@ -47,7 +47,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="customerIds">Danh sách ID các khách hàng cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (14/08/2021)
-        int DeleteCustomer(List<Guid> customerIds);
+        int Delete(List<Guid> customerIds);
 
         /// <summary>
         /// Lấy thông tin khách hàng bằng mã khách hàng
@@ -55,6 +55,6 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="customerCode">Mã khách hàng</param>
         /// <returns>Thông tin khách hàng cần lấy</returns>
         /// Author: NQMinh (14/08/2021)
-        Customer GetCustomerByCode(string customerCode);
+        Customer GetByCode(string customerCode);
     }
 }

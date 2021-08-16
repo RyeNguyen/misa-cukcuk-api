@@ -10,7 +10,9 @@ using Microsoft.OpenApi.Models;
 using MISA.ApplicationCore;
 using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.ApplicationCore.Interfaces.Services;
+using MISA.ApplicationCore.Services;
 using MISA.Infrastructure;
+using MISA.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +58,9 @@ namespace MISA.CukCuk.Api
 
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

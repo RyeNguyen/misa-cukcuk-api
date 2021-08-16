@@ -36,7 +36,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet]      
         public IActionResult GetCustomers() 
         {
-            var customers = _customerService.GetCustomers();
+            var customers = _customerService.GetAll();
             try
             {
                 if (customers.Any())
@@ -70,7 +70,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet("{customerId}")]
         public IActionResult GetById(Guid customerId)
         {                        
-            var customer = _customerService.GetCustomerById(customerId);
+            var customer = _customerService.GetById(customerId);
            
             try
             {
@@ -100,7 +100,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPost]
         public IActionResult InsertCustomer(Customer customer)
         {            
-            var insertResult = _customerService.InsertCustomer(customer);
+            var insertResult = _customerService.Insert(customer);
 
             if (insertResult.MISACode == MISACode.NotValid)
             {
@@ -122,7 +122,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPut("{CustomerId}")]
         public IActionResult UpdateCustomer(Guid customerId, Customer customer)
         {            
-            var updateResult = _customerService.UpdateCustomer(customerId, customer);
+            var updateResult = _customerService.Update(customerId, customer);
 
             if (updateResult.MISACode == MISACode.NotValid)
             {
@@ -144,7 +144,7 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpDelete("{CustomerId}")]
         public IActionResult DeleteCustomer(List<Guid> customerIds)
         {           
-            var deleteResult = _customerService.DeleteCustomer(customerIds);
+            var deleteResult = _customerService.Delete(customerIds);
 
             if (deleteResult.MISACode == MISACode.NotValid)
             {

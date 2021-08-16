@@ -5,60 +5,63 @@ using MISA.Entity;
 using MISA.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MISA.ApplicationCore
+namespace MISA.ApplicationCore.Services
 {
-    public class CustomerService : ICustomerService
+    public class EmployeeService : IEmployeeService
     {
-        readonly ICustomerRepository _customerRepository;
+        readonly IEmployeeRepository _employeeRepository;
         readonly ServiceResponse _serviceResponse;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository)
         {
-            _customerRepository = customerRepository;
+            _employeeRepository = employeeRepository;
             _serviceResponse = new ServiceResponse();
         }
 
         #region Method
-        #region Phương thức lấy tất cả dữ liệu khách hàng
+        #region Phương thức lấy tất cả dữ liệu nhân viên
         /// <summary>
-        /// Lấy danh sách khách hàng từ DB
+        /// Lấy danh sách nhân viên từ DB
         /// </summary>
-        /// <returns>Danh sách khách hàng</returns>
-        public List<Customer> GetAll()
-        {            
-            var customers = _customerRepository.Get();
-            return customers;
+        /// <returns>Danh sách nhân viên</returns>
+        public List<Employee> GetAll()
+        {
+            var employees = _employeeRepository.Get();
+            return employees;
         }
         #endregion
 
-        #region Phương thức lấy dữ liệu khách hàng theo ID
-        public Customer GetById(Guid customerId)
-        {            
-            var customer = _customerRepository.GetById(customerId);          
-            return customer;
+        #region Phương thức lấy dữ liệu nhân viên theo ID
+        public Employee GetById(Guid employeeId)
+        {
+            var employee = _employeeRepository.GetById(employeeId);
+            return employee;
         }
         #endregion
 
-        #region Phương thức thêm dữ liệu khách hàng vào DB
+        #region Phương thức thêm dữ liệu nhân viên vào DB
         /// <summary>
-        /// Thêm mới khách hàng vào DB
+        /// Thêm mới nhân viên vào DB
         /// </summary>
-        /// <param name="customer">Dữ liệu khách hàng muốn thêm</param>
+        /// <param name="employee">Dữ liệu nhân viên muốn thêm</param>
         /// <returns>Phản hồi tương ứng có thêm thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Insert(Customer customer)
-        {                             
+        /// Author: NQMinh (16/08/2021)
+        public ServiceResponse Insert(Employee employee)
+        {
             //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
             //Check trường bắt buộc nhập:
-            var customerCode = customer.CustomerCode;
-            if (string.IsNullOrEmpty(customerCode))
+            var employeeCode = employee.EmployeeCode;
+            if (string.IsNullOrEmpty(employeeCode))
             {
                 var msg = new
                 {
                     devMsg = new
                     {
-                        fieldName = "CustomerCode",
+                        fieldName = "EmployeeCode",
                         msg = Properties.Resources.messageCheckRequired_Dev
                     },
                     userMsg = Properties.Resources.messageCheckRequired_User,
@@ -71,14 +74,14 @@ namespace MISA.ApplicationCore
             }
 
             //Check trùng mã: 
-            var customerToCheck = _customerRepository.GetByCode(customerCode);
-            if (customerToCheck != null)
+            var employeeToCheck = _employeeRepository.GetByCode(employeeCode);
+            if (employeeToCheck != null)
             {
                 var msg = new
                 {
                     devMsg = new
                     {
-                        fieldName = "CustomerCode",
+                        fieldName = "EmployeeCode",
                         msg = Properties.Resources.messageCheckCodeDuplicate_Dev
                     },
                     userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
@@ -91,7 +94,7 @@ namespace MISA.ApplicationCore
             }
 
             //Thêm mới khi dữ liệu hợp lệ:
-            var rowAffects = _customerRepository.Insert(customer);
+            var rowAffects = _employeeRepository.Insert(employee);
             _serviceResponse.Data = rowAffects;
             _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
             _serviceResponse.MISACode = MISACode.isValid;
@@ -100,26 +103,26 @@ namespace MISA.ApplicationCore
         #endregion
 
         /// <summary>
-        /// Cập nhật thông tin khách hàng
+        /// Cập nhật thông tin nhân viên
         /// </summary>
-        /// <param name="customerId">ID của khách hàng cần cập nhật</param>
-        /// <param name="customer">Dữ liệu để thay đổi</param>
+        /// <param name="employeeId">ID của nhân viên cần cập nhật</param>
+        /// <param name="employee">Dữ liệu để thay đổi</param>
         /// <returns>Phản hồi tương ứng có cập nhật thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Update(Guid customerId, Customer customer)
-        {                      
+        /// Author: NQMinh (16/08/2021)
+        public ServiceResponse Update(Guid employeeId, Employee employee)
+        {
             //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
             //Check trùng mã: 
-            var customerCode = customer.CustomerCode;
-            
-            var customerToCheck = _customerRepository.GetByCode(customerCode);
-            if (customerToCheck != null)
+            var employeeCode = employee.EmployeeCode;
+
+            var employeeToCheck = _employeeRepository.GetByCode(employeeCode);
+            if (employeeToCheck != null)
             {
                 var msg = new
                 {
                     devMsg = new
                     {
-                        fieldName = "CustomerCode",
+                        fieldName = "EmployeeCode",
                         msg = Properties.Resources.messageCheckCodeDuplicate_Dev
                     },
                     userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
@@ -132,7 +135,7 @@ namespace MISA.ApplicationCore
             }
 
             //Sửa thông tin khi dữ liệu hợp lệ:
-            var rowAffects = _customerRepository.Update(customerId, customer);
+            var rowAffects = _employeeRepository.Update(employeeId, employee);
             _serviceResponse.Data = rowAffects;
             _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
             _serviceResponse.MISACode = MISACode.isValid;
@@ -140,19 +143,19 @@ namespace MISA.ApplicationCore
         }
 
         /// <summary>
-        /// Xóa thông tin khách hàng
+        /// Xóa thông tin nhân viên
         /// </summary>
-        /// <param name="customerId">ID của khách hàng cần xóa</param>
+        /// <param name="employeeId">ID của nhân viên cần xóa</param>
         /// <returns>Phản hồi tương ứng có xóa thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Delete(List<Guid> customerId)
-        {                        
-            var rowAffects = _customerRepository.Delete(customerId);
+        /// Author: NQMinh (16/08/2021)
+        public ServiceResponse Delete(List<Guid> employeeIds)
+        {
+            var rowAffects = _employeeRepository.Delete(employeeIds);
             _serviceResponse.Data = rowAffects;
             _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
-        }
+        }        
         #endregion
     }
 }

@@ -36,7 +36,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Giới tính nhân viên
         /// </summary>
-        public int? Gender { get; set; }
+        public int? Gender { get; set; }        
 
         /// <summary>
         /// Ngày tháng năm sinh nhân viên

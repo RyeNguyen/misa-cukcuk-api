@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.Infrastructure.Models;
 using MySqlConnector;
 using System;
@@ -7,11 +8,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MISA.ApplicationCore.Interfaces.Repositories;
 
-namespace MISA.Infrastructure
+namespace MISA.Infrastructure.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class EmployeeRepository : IEmployeeRepository
     {
         #region Fields
         //Khởi tạo kết nối với DB
@@ -24,66 +24,88 @@ namespace MISA.Infrastructure
         #endregion
 
         #region Constructor
-        public CustomerRepository()
+        public EmployeeRepository()
         {
             _dbConnection = new MySqlConnection(_connectionString);
         }
         #endregion
 
         #region Methods
-        #region Phương thức lấy tất cả dữ liệu khách hàng
+        #region Phương thức lấy tất cả dữ liệu nhân viên
         /// <summary>
-        /// Lấy toàn bộ danh sách khách hàng từ DB
+        /// Lấy toàn bộ danh sách nhân viên từ DB
         /// </summary>
-        /// <returns>Danh sách khách hàng</returns>
+        /// <returns>Danh sách nhân viên</returns>
         /// Author: NQMinh(10/08/2021)
-        public List<Customer> Get()
-        {                       
-            var customers = _dbConnection.Query<Customer>("Proc_CustomersGetAll", commandType: CommandType.StoredProcedure);
+        public List<Employee> Get()
+        {
+            var employees = _dbConnection.Query<Employee>("Proc_EmployeesGetAll", commandType: CommandType.StoredProcedure);
 
             //Trả về dữ liệu:
-            return customers.ToList();
+            return employees.ToList();
         }
         #endregion
 
-        #region Phương thức lấy thông tin khách hàng qua ID
+        #region Phương thức lấy thông tin nhân viên qua ID
         /// <summary>
-        /// Lấy thông tin khách hàng theo ID
+        /// Lấy thông tin nhân viên theo ID
         /// </summary>
-        /// <returns>Thông tin khách hàng cần lấy</returns>
-        public Customer GetById(Guid customerId)
+        /// <returns>Thông tin nhân viên cần lấy</returns>
+        public Employee GetById(Guid employeeId)
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add("@dynamicCustomerId", customerId);
+            parameters.Add("@dynamicEmployeeId", employeeId);
 
-            var sqlCommand = $"SELECT * FROM Customer WHERE CustomerId = @dynamicCustomerId";
+            var sqlCommand = $"SELECT * FROM Employee WHERE EmployeeId = @dynamicEmployeeId";
 
-            var customer = _dbConnection.QueryFirstOrDefault<Customer>(sqlCommand, param: parameters);
+            var employee = _dbConnection.QueryFirstOrDefault<Employee>(sqlCommand, param: parameters);
 
-            return customer;
+            return employee;
         }
         #endregion
 
-        #region Phương thức thêm khách hàng vào DB
+        #region Phương thức lấy thông tin nhân viên qua mã nhân viên
         /// <summary>
-        /// Thêm mới khách hàng
+        /// Lấy nhân viên theo mã nhân viên
         /// </summary>
-        /// <param name="customer">Object khách hàng</param>
-        /// <returns>Số bản ghi bị ảnh hưởng</returns>
-        /// Author: NQMinh(12/08/2021)
-        public int Insert(Customer customer)
-        {                                        
+        /// <param name="employeeCode">Mã nhân viên</param>
+        /// <returns>Object nhân viên đầu tiên lấy được</returns>
+        /// Author: NQMinh(16/08/2021)
+        public Employee GetByCode(string employeeCode)
+        {
             //Khai báo dynamic param:
-            var dynamicParams = new DynamicParameters();            
+            var dynamicParams = new DynamicParameters();
 
-            customer.CustomerId = Guid.NewGuid();
-            
+            dynamicParams.Add("@dynamicEmployeeCode", employeeCode);
+
+            var sqlCommand = $"SELECT * FROM Employee WHERE EmployeeCode = @dynamicEmployeeCode LIMIT 1";
+
+            var employee = _dbConnection.QueryFirstOrDefault<Employee>(sqlCommand, param: dynamicParams);
+
+            return employee;
+        }
+        #endregion
+
+        #region Phương thức thêm nhân viên vào DB
+        /// <summary>
+        /// Thêm mới nhân viên
+        /// </summary>
+        /// <param name="employee">Object nhân viên</param>
+        /// <returns>Số bản ghi bị ảnh hưởng</returns>
+        /// Author: NQMinh(16/08/2021)
+        public int Insert(Employee employee)
+        {
+            //Khai báo dynamic param:
+            var dynamicParams = new DynamicParameters();
+
+            employee.EmployeeId = Guid.NewGuid();
+
             var columnsName = string.Empty;
             var columnsParam = string.Empty;
 
             //Đọc từng property của object:
-            var properties = customer.GetType().GetProperties();
+            var properties = employee.GetType().GetProperties();
 
             //Duyệt từng property:
             foreach (var prop in properties)
@@ -92,7 +114,7 @@ namespace MISA.Infrastructure
                 var propName = prop.Name;
 
                 //Lấy value của prop:
-                var propValue = prop.GetValue(customer);
+                var propValue = prop.GetValue(employee);
 
                 //Lấy kiểu dữ liệu của prop:
                 var propType = prop.PropertyType;
@@ -103,12 +125,12 @@ namespace MISA.Infrastructure
                 columnsName += $"{propName},";
                 columnsParam += $"@{propName},";
             }
-            
+
             //Loại ký tự thừa ở cuối khỏi hai cột:
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
 
-            var sqlCommand = $"INSERT INTO Customer({columnsName}) VALUES ({columnsParam})";
+            var sqlCommand = $"INSERT INTO Employee({columnsName}) VALUES ({columnsParam})";
 
             var rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParams);
 
@@ -118,21 +140,21 @@ namespace MISA.Infrastructure
         #endregion
 
         /// <summary>
-        /// Sửa thông tin khách hàng
+        /// Sửa thông tin nhân viên
         /// </summary>
-        /// <param name="customerId">ID của khách hàng cần sửa</param>
-        /// <param name="customer">Dữ liệu cần sửa của khách hàng</param>
+        /// <param name="employeeId">ID của nhân viên cần sửa</param>
+        /// <param name="employee">Dữ liệu cần sửa của nhân viên</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
-        /// Author: NQMinh (12/08/2021)
-        public int Update(Guid customerId, Customer customer)
+        /// Author: NQMinh (16/08/2021)
+        public int Update(Guid employeeId, Employee employee)
         {
             //Khai báo dynamic param:
             DynamicParameters dynamicParams = new();
 
             var queryString = string.Empty;
-   
+
             //Đọc từng property của object:
-            var properties = customer.GetType().GetProperties();
+            var properties = employee.GetType().GetProperties();
 
             //Duyệt từng property:
             foreach (var prop in properties)
@@ -141,13 +163,13 @@ namespace MISA.Infrastructure
                 var propName = prop.Name;
 
                 //Lấy value của prop:
-                var propValue = prop.GetValue(customer);
+                var propValue = prop.GetValue(employee);
 
                 //Lấy kiểu dữ liệu của prop:
                 var propType = prop.PropertyType;
 
                 //Thêm param tương ứng với mỗi property của đối tượng:
-                if (propName != "CustomerId" && propName != "CustomerCode" && propValue != null)
+                if (propName != "EmployeeId" && propName != "EmployeeCode" && propValue != null)
                 {
                     dynamicParams.Add($"@{propName}", propValue);
 
@@ -155,11 +177,11 @@ namespace MISA.Infrastructure
                 }
             }
 
-            dynamicParams.Add("@ExistingId", customerId);
+            dynamicParams.Add("@ExistingId", employeeId);
 
             queryString = queryString.Remove(queryString.Length - 1, 1);
 
-            var sqlCommand = $"UPDATE Customer SET {queryString} WHERE CustomerId = @ExistingId";
+            var sqlCommand = $"UPDATE Employee SET {queryString} WHERE EmployeeId = @ExistingId";
 
             var rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParams);
 
@@ -167,45 +189,23 @@ namespace MISA.Infrastructure
         }
 
         /// <summary>
-        /// Xóa khách hàng khỏi DB
+        /// Xóa nhân viên khỏi DB
         /// </summary>
-        /// <param name="customerId">ID của khách hàng cần xóa</param>
+        /// <param name="employeeId">ID của nhân viên cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
-        /// Author: NQMinh (12/08/2021)
-        public int Delete(List<Guid> customerId)
+        /// Author: NQMinh (16/08/2021)
+        public int Delete(List<Guid> employeeIds)
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add("@dynamicCustomerId", customerId);
+            parameters.Add("@dynamicEmployeeId", employeeIds);
 
-            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId = @dynamicCustomerId";
+            var sqlCommand = $"DELETE FROM Employee WHERE EmployeeId IN @dynamicEmployeeId";
 
             var rowAffects = _dbConnection.Execute(sqlCommand, param: parameters);
 
             return rowAffects;
-        }
-
-        #region Phương thức lấy thông tin khách hàng qua mã khách hàng
-        /// <summary>
-        /// Lấy khách hàng theo mã khách hàng
-        /// </summary>
-        /// <param name="customerCode">Mã khách hàng</param>
-        /// <returns>Object khách hàng đầu tiên lấy được</returns>
-        /// Author: NQMinh(12/08/2021)
-        public Customer GetByCode(string customerCode)
-        {
-            //Khai báo dynamic param:
-            var dynamicParams = new DynamicParameters();
-
-            dynamicParams.Add("@dynamicCustomerCode", customerCode);
-
-            var sqlCommand = $"SELECT * FROM Customer WHERE CustomerCode = @dynamicCustomerCode LIMIT 1";
-
-            var customer = _dbConnection.QueryFirstOrDefault<Customer>(sqlCommand, param: dynamicParams);
-
-            return customer;
-        }
-        #endregion
+        }       
         #endregion
     }
 }
