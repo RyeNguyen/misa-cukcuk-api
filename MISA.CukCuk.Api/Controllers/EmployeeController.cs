@@ -74,14 +74,14 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet("{employeeId}")]
         public IActionResult GetEmployeeById(Guid employeeId)
-        {
-            var customer = _employeeService.GetById(employeeId);
-
+        {            
             try
             {
-                if (customer != null)
+                var  employee = _employeeService.GetById(employeeId);
+
+                if (employee != null)
                 {
-                    return StatusCode(200, customer);
+                    return StatusCode(200, employee);
                 }
                 else
                 {

@@ -10,6 +10,7 @@ using Dapper;
 using MISA.Infrastructure.Models;
 using MISA.Entity;
 using MISA.ApplicationCore.Interfaces.Services;
+using MISA.ApplicationCore.Interfaces.Repositories;
 
 namespace MISA.CukCuk.Api.Controllers
 {
@@ -18,12 +19,14 @@ namespace MISA.CukCuk.Api.Controllers
     public class CustomersController : ControllerBase
     {
         #region Fields
-        readonly ICustomerService _customerService;
+        readonly private ICustomerRepository _customerRepository;
+        readonly private ICustomerService _customerService;
         #endregion
 
         #region Constructor
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerRepository customerRepository, ICustomerService customerService)
         {
+            _customerRepository = customerRepository;
             _customerService = customerService;
         }
         #endregion
@@ -35,13 +38,14 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet]      
         public IActionResult GetCustomers() 
-        {
-            var customers = _customerService.GetAll();
+        {            
             try
             {
-                if (customers.Any())
+                var customers = _customerService.GetAll();
+
+                if (customers.MISACode == MISACode.isValid)
                 {
-                    return StatusCode(200, customers);
+                    return StatusCode(200, customers.Data);
                 }
                 else
                 {
@@ -69,14 +73,14 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet("{customerId}")]
         public IActionResult GetById(Guid customerId)
-        {                        
-            var customer = _customerService.GetById(customerId);
-           
+        {                                               
             try
             {
-                if (customer != null)
+                var customer = _customerService.GetById(customerId);
+
+                if (customer.MISACode != MISACode.isValid)
                 {
-                    return StatusCode(200, customer);
+                    return StatusCode(200, customer.Data);
                 }
                 else
                 {                    

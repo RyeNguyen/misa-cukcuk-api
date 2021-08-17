@@ -1,6 +1,7 @@
 ﻿using MISA.ApplicationCore.Entities;
 using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.ApplicationCore.Interfaces.Services;
+using MISA.ApplicationCore.Services;
 using MISA.Entity;
 using MISA.Infrastructure.Models;
 using System;
@@ -8,151 +9,15 @@ using System.Collections.Generic;
 
 namespace MISA.ApplicationCore
 {
-    public class CustomerService :  ICustomerService
+    public class CustomerService : BaseService<Customer>, ICustomerService
     {
-        readonly ICustomerRepository _customerRepository;
+        //readonly ICustomerRepository _customerRepository;
         readonly ServiceResponse _serviceResponse;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(IBaseRepository<Customer> baseRepository) : base(baseRepository)
         {
-            _customerRepository = customerRepository;
+            //_customerRepository = customerRepository;
             _serviceResponse = new ServiceResponse();
         }
-
-        #region Method
-        #region Phương thức lấy tất cả dữ liệu khách hàng
-        /// <summary>
-        /// Lấy danh sách khách hàng từ DB
-        /// </summary>
-        /// <returns>Danh sách khách hàng</returns>
-        public List<Customer> GetAll()
-        {            
-            var customers = _customerRepository.Get();
-            return customers;
-        }
-        #endregion
-
-        #region Phương thức lấy dữ liệu khách hàng theo ID
-        public Customer GetById(Guid customerId)
-        {            
-            var customer = _customerRepository.GetById(customerId);          
-            return customer;
-        }
-        #endregion
-
-        #region Phương thức thêm dữ liệu khách hàng vào DB
-        /// <summary>
-        /// Thêm mới khách hàng vào DB
-        /// </summary>
-        /// <param name="customer">Dữ liệu khách hàng muốn thêm</param>
-        /// <returns>Phản hồi tương ứng có thêm thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Insert(Customer customer)
-        {                             
-            //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
-            //Check trường bắt buộc nhập:
-            var customerCode = customer.CustomerCode;
-            if (string.IsNullOrEmpty(customerCode))
-            {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = "CustomerCode",
-                        msg = Properties.Resources.messageCheckRequired_Dev
-                    },
-                    userMsg = Properties.Resources.messageCheckRequired_User,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = msg;
-                _serviceResponse.Message = Properties.Resources.messageCheckRequired_Dev;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                return _serviceResponse;
-            }
-
-            //Check trùng mã: 
-            var customerToCheck = _customerRepository.GetByCode(customerCode);
-            if (customerToCheck != null)
-            {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = "CustomerCode",
-                        msg = Properties.Resources.messageCheckCodeDuplicate_Dev
-                    },
-                    userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = msg;
-                _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                return _serviceResponse;
-            }
-
-            //Thêm mới khi dữ liệu hợp lệ:
-            var rowAffects = _customerRepository.Insert(customer);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
-            _serviceResponse.MISACode = MISACode.isValid;
-            return _serviceResponse;
-        }
-        #endregion
-
-        /// <summary>
-        /// Cập nhật thông tin khách hàng
-        /// </summary>
-        /// <param name="customerId">ID của khách hàng cần cập nhật</param>
-        /// <param name="customer">Dữ liệu để thay đổi</param>
-        /// <returns>Phản hồi tương ứng có cập nhật thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Update(Guid customerId, Customer customer)
-        {                      
-            //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
-            //Check trùng mã: 
-            var customerCode = customer.CustomerCode;
-            
-            var customerToCheck = _customerRepository.GetByCode(customerCode);
-            if (customerToCheck != null)
-            {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = "CustomerCode",
-                        msg = Properties.Resources.messageCheckCodeDuplicate_Dev
-                    },
-                    userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = msg;
-                _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                return _serviceResponse;
-            }
-
-            //Sửa thông tin khi dữ liệu hợp lệ:
-            var rowAffects = _customerRepository.Update(customerId, customer);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
-            _serviceResponse.MISACode = MISACode.isValid;
-            return _serviceResponse;
-        }
-
-        /// <summary>
-        /// Xóa thông tin khách hàng
-        /// </summary>
-        /// <param name="customerId">ID của khách hàng cần xóa</param>
-        /// <returns>Phản hồi tương ứng có xóa thành công hay không</returns>
-        /// Author: NQMinh (12/08/2021)
-        public ServiceResponse Delete(List<Guid> customerId)
-        {                        
-            var rowAffects = _customerRepository.Delete(customerId);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
-            _serviceResponse.MISACode = MISACode.isValid;
-            return _serviceResponse;
-        }
-        #endregion
     }
 }
