@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace MISA.ApplicationCore
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService :  ICustomerService
     {
         readonly ICustomerRepository _customerRepository;
         readonly ServiceResponse _serviceResponse;

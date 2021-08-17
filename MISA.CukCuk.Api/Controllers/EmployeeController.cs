@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.ApplicationCore.Interfaces.Services;
 using MISA.Entity;
 using MISA.Infrastructure.Models;
@@ -19,12 +20,14 @@ namespace MISA.CukCuk.Api.Controllers
     public class EmployeesController : ControllerBase
     {
         #region Fields
+        readonly IEmployeeRepository<Employee> _employeeRepository;
         readonly IEmployeeService _employeeService;
         #endregion
 
         #region Constructor
-        public EmployeesController(IEmployeeService employeeService)
+        public EmployeesController(IEmployeeRepository<Employee> employeeRepository, IEmployeeService employeeService)
         {
+            _employeeRepository = employeeRepository;
             _employeeService = employeeService;
         }
         #endregion
@@ -157,7 +160,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// Phương thức xóa thông tin nhân viên
         /// </summary>
         /// <param name="employeeId">ID của nhân viên</param>
-        /// <returns></returns>
+        /// <returns></rethurns>
         [HttpDelete("{EmployeeId}")]
         public IActionResult DeleteCustomer(List<Guid> employeeIds)
         {
