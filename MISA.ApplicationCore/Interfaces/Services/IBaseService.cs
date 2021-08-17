@@ -9,9 +9,9 @@ namespace MISA.ApplicationCore.Interfaces.Services
 {
     public interface IBaseService<MISAEntity>
     {
-        List<MISAEntity> GetAll();
+        ServiceResponse GetAll();
 
-        MISAEntity GetById(Guid entityId);
+        ServiceResponse GetById(Guid entityId);
 
         ServiceResponse Insert(MISAEntity entity);
 

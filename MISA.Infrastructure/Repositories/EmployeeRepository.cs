@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MISA.Infrastructure.Repositories
 {
-    public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository<Employee>
+    public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
         //#region Fields
         ////Khởi tạo kết nối với DB

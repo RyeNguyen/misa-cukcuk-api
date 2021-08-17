@@ -24,17 +24,30 @@ namespace MISA.ApplicationCore.Services
 
         public ServiceResponse Delete(List<Guid> entityIds)
         {
-            throw new NotImplementedException();
+            _serviceResponse.Data = _baseRepository.Delete(entityIds);
+
+            return _serviceResponse;
         }
 
-        public List<MISAEntity> GetAll()
+        public ServiceResponse GetAll()
         {
-            throw new NotImplementedException();
+            _serviceResponse.Data = _baseRepository.GetAll();
+            if (_serviceResponse.Data != null)
+            {
+                _serviceResponse.MISACode = MISACode.isValid;
+            }
+            else
+            {
+                _serviceResponse.MISACode = MISACode.NotValid;
+            }
+            return _serviceResponse; 
         }
 
-        public MISAEntity GetById(Guid entityId)
+        public ServiceResponse GetById(Guid entityId)
         {
-            throw new NotImplementedException();
+            _serviceResponse.Data = _baseRepository.GetById(entityId);
+
+            return _serviceResponse;
         }
 
         public ServiceResponse Insert(MISAEntity entity)

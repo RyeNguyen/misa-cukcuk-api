@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MISA.ApplicationCore.Interfaces.Repositories
 {
-    public interface IEmployeeRepository<MISAEntity> : IBaseRepository<MISAEntity>
+    public interface IEmployeeRepository : IBaseRepository<Employee>
     {
         ///// <summary>
         ///// Lất tất cả nhân viên

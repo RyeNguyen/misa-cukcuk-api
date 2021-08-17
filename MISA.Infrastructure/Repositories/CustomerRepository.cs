@@ -39,7 +39,7 @@ namespace MISA.Infrastructure
         /// Author: NQMinh(10/08/2021)
         public List<Customer> Get()
         {                       
-            var customers = _dbConnection.Query<Customer>("Proc_CustomersGetAll", commandType: CommandType.StoredProcedure);
+            var customers = _dbConnection.Query<Customer>("Proc_CustomerGetAll", commandType: CommandType.StoredProcedure);
 
             //Trả về dữ liệu:
             return customers.ToList();

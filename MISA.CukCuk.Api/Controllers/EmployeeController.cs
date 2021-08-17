@@ -20,12 +20,12 @@ namespace MISA.CukCuk.Api.Controllers
     public class EmployeesController : ControllerBase
     {
         #region Fields
-        readonly IEmployeeRepository<Employee> _employeeRepository;
+        readonly IEmployeeRepository _employeeRepository;
         readonly IEmployeeService _employeeService;
         #endregion
 
         #region Constructor
-        public EmployeesController(IEmployeeRepository<Employee> employeeRepository, IEmployeeService employeeService)
+        public EmployeesController(IEmployeeRepository employeeRepository, IEmployeeService employeeService)
         {
             _employeeRepository = employeeRepository;
             _employeeService = employeeService;
@@ -39,13 +39,14 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         public IActionResult GetEmployees()
-        {
-            var customers = _employeeService.GetAll();
+        {            
             try
             {
-                if (customers.Any())
+                var employees = _employeeService.GetAll();
+
+                if (employees.MISACode == MISACode.isValid)
                 {
-                    return StatusCode(200, customers);
+                    return StatusCode(200, employees.Data);
                 }
                 else
                 {
