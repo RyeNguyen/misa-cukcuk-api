@@ -57,6 +57,36 @@ namespace MISA.Infrastructure.Models
         /// Số điện thoại
         /// </summary>
         public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// ID nhóm khách hàng
+        /// </summary>
+        public Guid? CustomerGroupId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DebitAmount { get; set; }
+
+        /// <summary>
+        /// Số thẻ thành viên
+        /// </summary>
+        public string MemberCard { get; set; }
+
+        /// <summary>
+        /// Tên công ty
+        /// </summary>
+        public string CompanyName { get; set; }
+
+        /// <summary>
+        /// Mã thuế công ty
+        /// </summary>
+        public string CompanyTaxCode { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsStopFollow { get; set; } = false;
         #endregion
     }
 }

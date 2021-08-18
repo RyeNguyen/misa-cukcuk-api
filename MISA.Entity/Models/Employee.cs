@@ -84,6 +84,16 @@ namespace MISA.Infrastructure.Models
         public int? MartialStatus { get; set; }
 
         /// <summary>
+        /// Trình độ học vấn
+        /// </summary>
+        public int? EducationalBackground { get; set; }
+
+        /// <summary>
+        /// ID chuyên môn
+        /// </summary>
+        public Guid? QualificationId { get; set; }
+
+        /// <summary>
         /// Id Phòng ban
         /// </summary>
         public Guid? DepartmentId { get; set; }

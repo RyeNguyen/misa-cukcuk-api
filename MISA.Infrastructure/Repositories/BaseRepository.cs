@@ -57,11 +57,9 @@ namespace MISA.Infrastructure.Repositories
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add("@dynamicId", entityId);
+            parameters.Add($"@{className}Id", entityId);
 
-            var sqlCommand = $"SELECT * FROM {className} WHERE {className}Id = @dynamicId";
-
-            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>(sqlCommand, param: parameters);
+            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>($"Proc_{className}GetById", param: parameters, commandType: CommandType.StoredProcedure);
 
             return entity;
         }
@@ -78,11 +76,11 @@ namespace MISA.Infrastructure.Repositories
         {
             var dynamicParams = new DynamicParameters();
 
-            dynamicParams.Add("@dynamicCode", entityCode);
+            var storeName = $"Proc_{className}GetByCode";
 
-            var sqlCommand = $"SELECT * FROM {className} WHERE {className}Code = @dynamicCode LIMIT 1";
+            dynamicParams.Add($"@{className}Code", entityCode);
 
-            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>(sqlCommand, param: dynamicParams);
+            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>(storeName, param: dynamicParams, commandType: CommandType.StoredProcedure);
 
             return entity;
         }
@@ -120,26 +118,26 @@ namespace MISA.Infrastructure.Repositories
                 var propType = prop.PropertyType;
 
                 //Thêm param tương ứng với mỗi property của đối tượng:
-                if (propName == $"{className}Id")
-                {
-                    dynamicParams.Add($"@{propName}", newId);
-                } 
-                else
-                {
-                    dynamicParams.Add($"@{propName}", propValue);
-                }
-                              
+                //if (propName == $"{className}Id")
+                //{
+                //    dynamicParams.Add($"@{propName}", newId);
+                //} 
+                //else
+                //{
+                //    dynamicParams.Add($"@{propName}", propValue);
+                //}
+
+                dynamicParams.Add($"@{propName}", propValue);
+
                 columnsName += $"{propName},";
                 columnsParam += $"@{propName},";
             }
 
             //Loại ký tự thừa ở cuối khỏi hai cột:
-            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
+            //columnsName = columnsName.Remove(columnsName.Length - 1, 1);
+            //columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
 
-            var sqlCommand = $"INSERT INTO {className}({columnsName}) VALUES ({columnsParam})";
-
-            var rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParams);
+            var rowAffects = _dbConnection.Execute($"Proc_{className}Insert", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
             //Trả về số bản ghi thêm mới:
             return rowAffects;
@@ -158,7 +156,7 @@ namespace MISA.Infrastructure.Repositories
             //Khai báo dynamic param:
             DynamicParameters dynamicParams = new();
 
-            var queryString = string.Empty;
+            //var queryString = string.Empty;
 
             //Đọc từng property của object:
             var properties = entity.GetType().GetProperties();
@@ -180,17 +178,15 @@ namespace MISA.Infrastructure.Repositories
                 {
                     dynamicParams.Add($"@{propName}", propValue);
 
-                    queryString += $"{propName} = @{propName},";
+                    //queryString += $"{propName} = @{propName},";
                 }
             }
 
-            dynamicParams.Add("@ExistingId", entityId);
+            dynamicParams.Add($"@{className}Id", entityId);
 
-            queryString = queryString.Remove(queryString.Length - 1, 1);
+            //queryString = queryString.Remove(queryString.Length - 1, 1);
 
-            var sqlCommand = $"UPDATE {className} SET {queryString} WHERE ${className}Id = @ExistingId";
-
-            var rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParams);
+            var rowAffects = _dbConnection.Execute($"Proc_{className}Update", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
             return rowAffects;
         }
@@ -198,18 +194,16 @@ namespace MISA.Infrastructure.Repositories
         /// <summary>
         /// Xóa thực thể khỏi DB
         /// </summary>
-        /// <param name="entutyIds">Danh sách ID của thực thể cần xóa</param>
+        /// <param name="entityIds">Danh sách ID của thực thể cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (16/08/2021)
         public int Delete(List<Guid> entityIds)
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add("@dynamicIds", entityIds);
+            parameters.Add($"@{className}Ids", entityIds);
 
-            var sqlCommand = $"DELETE FROM {className} WHERE ${className}Id IN @dynamicIds";
-
-            var rowAffects = _dbConnection.Execute(sqlCommand, param: parameters);
+            var rowAffects = _dbConnection.Execute($"Proc_{className}Delete", param: parameters, commandType: CommandType.StoredProcedure);
 
             return rowAffects;
         }              

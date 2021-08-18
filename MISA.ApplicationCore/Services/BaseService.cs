@@ -163,8 +163,8 @@ namespace MISA.ApplicationCore.Services
         public ServiceResponse Delete(List<Guid> entityIds)
         {
             var rowAffects = _baseRepository.Delete(entityIds);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
+            _serviceResponse.Data = rowAffects;          
+            _serviceResponse.Message = Entity.Properties.Resources.messageSuccessCustomerDelete;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
