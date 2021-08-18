@@ -19,14 +19,14 @@ namespace MISA.Infrastructure.Repositories
                 "User Id = dev;" +
                 "Password = 12345678";
 
-        private readonly IDbConnection _dbConnection;
-        private readonly string className = typeof(MISAEntity).Name;
+        private IDbConnection _dbConnection;
+        private readonly string _className;
         #endregion
 
         #region Constructor
         public BaseRepository()
         {
-            _dbConnection = new MySqlConnection(_connectionString);
+            _className = typeof(MISAEntity).Name;
         }
         #endregion
 
@@ -39,10 +39,13 @@ namespace MISA.Infrastructure.Repositories
         /// Author: NQMinh(16/08/2021)
         public List<MISAEntity> GetAll()
         {
-            var entities = _dbConnection.Query<MISAEntity>($"Proc_{className}GetAll", commandType: CommandType.StoredProcedure);
+            using (_dbConnection = new MySqlConnection(_connectionString))
+            {
+                var entities = _dbConnection.Query<MISAEntity>($"Proc_{_className}GetAll", commandType: CommandType.StoredProcedure);
 
-            //Trả về dữ liệu:
-            return entities.ToList();
+                //Trả về dữ liệu:
+                return entities.ToList();
+            }
         }
         #endregion
 
@@ -57,9 +60,9 @@ namespace MISA.Infrastructure.Repositories
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add($"@{className}Id", entityId);
+            parameters.Add($"@{_className}Id", entityId);
 
-            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>($"Proc_{className}GetById", param: parameters, commandType: CommandType.StoredProcedure);
+            var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>($"Proc_{_className}GetById", param: parameters, commandType: CommandType.StoredProcedure);
 
             return entity;
         }
@@ -76,9 +79,9 @@ namespace MISA.Infrastructure.Repositories
         {
             var dynamicParams = new DynamicParameters();
 
-            var storeName = $"Proc_{className}GetByCode";
+            var storeName = $"Proc_{_className}GetByCode";
 
-            dynamicParams.Add($"@{className}Code", entityCode);
+            dynamicParams.Add($"@{_className}Code", entityCode);
 
             var entity = _dbConnection.QueryFirstOrDefault<MISAEntity>(storeName, param: dynamicParams, commandType: CommandType.StoredProcedure);
 
@@ -118,7 +121,7 @@ namespace MISA.Infrastructure.Repositories
                 var propType = prop.PropertyType;
 
                 //Thêm param tương ứng với mỗi property của đối tượng:
-                //if (propName == $"{className}Id")
+                //if (propName == $"{_className}Id")
                 //{
                 //    dynamicParams.Add($"@{propName}", newId);
                 //} 
@@ -137,7 +140,7 @@ namespace MISA.Infrastructure.Repositories
             //columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             //columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
 
-            var rowAffects = _dbConnection.Execute($"Proc_{className}Insert", param: dynamicParams, commandType: CommandType.StoredProcedure);
+            var rowAffects = _dbConnection.Execute($"Proc_{_className}Insert", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
             //Trả về số bản ghi thêm mới:
             return rowAffects;
@@ -174,7 +177,7 @@ namespace MISA.Infrastructure.Repositories
                 var propType = prop.PropertyType;
 
                 //Thêm param tương ứng với mỗi property của đối tượng:
-                if (propName != $"{className}Id" && propName != $"{className}Code" && propValue != null)
+                if (propName != $"{_className}Id" && propName != $"{_className}Code" && propValue != null)
                 {
                     dynamicParams.Add($"@{propName}", propValue);
 
@@ -182,11 +185,11 @@ namespace MISA.Infrastructure.Repositories
                 }
             }
 
-            dynamicParams.Add($"@{className}Id", entityId);
+            dynamicParams.Add($"@{_className}Id", entityId);
 
             //queryString = queryString.Remove(queryString.Length - 1, 1);
 
-            var rowAffects = _dbConnection.Execute($"Proc_{className}Update", param: dynamicParams, commandType: CommandType.StoredProcedure);
+            var rowAffects = _dbConnection.Execute($"Proc_{_className}Update", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
             return rowAffects;
         }
@@ -201,9 +204,9 @@ namespace MISA.Infrastructure.Repositories
         {
             var parameters = new DynamicParameters();
 
-            parameters.Add($"@{className}Ids", entityIds);
+            parameters.Add($"@{_className}Ids", entityIds);
 
-            var rowAffects = _dbConnection.Execute($"Proc_{className}Delete", param: parameters, commandType: CommandType.StoredProcedure);
+            var rowAffects = _dbConnection.Execute($"Proc_{_className}Delete", param: parameters, commandType: CommandType.StoredProcedure);
 
             return rowAffects;
         }              

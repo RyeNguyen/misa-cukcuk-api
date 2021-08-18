@@ -61,6 +61,16 @@ namespace MISA.ApplicationCore.Services
         {
             _serviceResponse.Data = _baseRepository.GetById(entityId);
 
+            if (_serviceResponse.Data != null)
+            {
+                _serviceResponse.MISACode = MISACode.isValid;              
+            }
+            else
+            {
+                _serviceResponse.MISACode = MISACode.NotValid;
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorCustomerGetById_Dev;
+            }
+
             return _serviceResponse;
         }
         #endregion
