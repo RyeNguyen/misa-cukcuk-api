@@ -44,6 +44,7 @@ namespace MISA.CukCuk.Api.Controllers
             }
             catch (Exception)
             {
+                var entities = _baseService.GetAll();
                 var errorObj = new
                 {
                     devMsg = Properties.Resources.messageGetCustomers_Dev,

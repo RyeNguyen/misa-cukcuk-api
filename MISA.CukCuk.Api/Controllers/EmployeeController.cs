@@ -32,5 +32,46 @@ namespace MISA.CukCuk.Api.Controllers
             _employeeRepository = employeeRepository;
         }
         #endregion
+
+        #region Methods
+        /// <summary>
+        /// Hàm xử lý phân trang cho nhân viên
+        /// </summary>
+        /// <param name="employeeFilter">Dữ liệu cần lọc</param>
+        /// <param name="departmentId">ID phòng ban</param>
+        /// <param name="positionId">ID vị trí</param>
+        /// <param name="pageIndex">Trang hiện tại</param>
+        /// <param name="pageSize">Số bản ghi một trang</param>
+        /// <returns>Dữ liệu phân trang</returns>
+        /// Author: NQMinh (19/08/2021)
+        [HttpGet("paging")]
+        public IActionResult EmployeePagination([FromQuery] string employeeFilter, [FromQuery] Guid? departmentId, [FromQuery] Guid? positionId, [FromQuery] int pageIndex, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var serviceResponse = _employeeService.Pagination(employeeFilter, departmentId, positionId, pageIndex, pageSize);
+
+                if ((int)serviceResponse.Data.GetType().GetProperty("totalRecord").GetValue(serviceResponse.Data) != 0)
+                {
+                    return StatusCode(200, serviceResponse.Data);
+                }
+                else
+                {
+                    return NoContent();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var errorObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = "Phân trang lỗi",
+                };
+                return StatusCode(500, errorObj);
+            }
+
+        }
+        #endregion
     }
 }

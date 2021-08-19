@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MISA.ApplicationCore.MISAAttribute;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Mã nhân viên
         /// </summary>
+        [MISARequired]
         public string EmployeeCode { get; set; }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Họ và tên nhân viên
         /// </summary>
+        [MISARequired]
         public string FullName { get; set; }
 
         /// <summary>
@@ -46,11 +49,13 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Số điện thoại nhân viên
         /// </summary>
+        [MISARequired]
         public string PhoneNumber { get; set; }
 
         /// <summary>
         /// Email nhân viên
         /// </summary>
+        [MISARequired]
         public string Email { get; set; }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Số cmnd/căn cước
         /// </summary>
+        [MISARequired]
         public string IdentityNumber { get; set; }
 
         /// <summary>

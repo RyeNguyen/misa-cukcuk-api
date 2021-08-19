@@ -1,6 +1,7 @@
 ﻿using MISA.ApplicationCore.Entities;
 using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.ApplicationCore.Interfaces.Services;
+using MISA.ApplicationCore.MISAAttribute;
 using MISA.Entity;
 using System;
 using System.Collections.Generic;
@@ -77,48 +78,24 @@ namespace MISA.ApplicationCore.Services
 
         public ServiceResponse Insert(MISAEntity entity)
         {
-            //Lấy mã thực thể để thực hiện validate dữ liệu
-            //    var entityCode = entity.GetType().GetProperty($"{_className}Code");             
-
-            //    //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
-            //    //Check trường bắt buộc nhập:
-            //    if (string.IsNullOrEmpty(entityCode))
-            //    {
-            //        var msg = new
-            //        {
-            //            devMsg = new
-            //            {
-            //                fieldName = $"{_className}Code",
-            //                msg = Properties.Resources.messageCheckRequired_Dev
-            //            },
-            //            userMsg = Properties.Resources.messageCheckRequired_User,
-            //            Code = MISACode.NotValid
-            //        };
-            //        _serviceResponse.Data = msg;
-            //        _serviceResponse.Message = Properties.Resources.messageCheckRequired_Dev;
-            //        _serviceResponse.MISACode = MISACode.NotValid;
-            //        return _serviceResponse;
-            //    }
-
-            //    //Check trùng mã: 
-            //    var entityToCheck = _baseRepository.GetByCode(entityCode);
-            //    if (entityToCheck != null)
-            //    {
-            //        var msg = new
-            //        {
-            //            devMsg = new
-            //            {
-            //                fieldName = $"{_className}Code",
-            //                msg = Properties.Resources.messageCheckCodeDuplicate_Dev
-            //            },
-            //            userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
-            //            Code = MISACode.NotValid
-            //        };
-            //        _serviceResponse.Data = msg;
-            //        _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
-            //        _serviceResponse.MISACode = MISACode.NotValid;
-            //        return _serviceResponse;
-            //    }
+            var check = ValidateCommon(entity);
+            if (check == false)
+            {
+                var msg = new
+                {
+                    devMsg = new
+                    {
+                        fieldName = $"{_className}Code",
+                        msg = Properties.Resources.messageCheckRequired_Dev
+                    },
+                    userMsg = Properties.Resources.messageCheckRequired_User,
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Data = msg;
+                _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
+                _serviceResponse.MISACode = MISACode.NotValid;
+                return _serviceResponse;
+            }
 
             //Thêm mới khi dữ liệu hợp lệ:
             var rowAffects = _baseRepository.Insert(entity);
@@ -177,6 +154,43 @@ namespace MISA.ApplicationCore.Services
             _serviceResponse.Message = Entity.Properties.Resources.messageSuccessCustomerDelete;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
+        }
+
+        private bool ValidateCommon(MISAEntity entity)
+        {
+            var isValid = true;
+            //Thực hiện validate:
+
+            //Bắt buộc nhập:
+            //1. Lấy thông tin các property:
+            var properties = typeof(MISAEntity).GetProperties();
+
+            //2. Xác định việc validate dựa trên attribute: (MISARequired - check thông tin không được phép null hoặc trống)
+            foreach(var prop in properties)
+            {
+                var propValue = prop.GetValue(entity);
+
+                var propName = prop.Name;
+
+                //Kiểm tra prop hiện tại có bắt buộc nhập hay không
+                var propMISARequired = prop.GetCustomAttributes(typeof(MISARequired), true);
+                if (propMISARequired.Length > 0)
+                {
+                    if (prop.PropertyType == typeof(string) && (propValue == null || propValue.ToString() == string.Empty))
+                    {
+                        isValid = false;
+                        _serviceResponse.Message = "Thông tin này không được phép để trống.";
+                        return isValid;
+                    }
+                }
+            }
+
+            return isValid;
+        }
+
+        protected virtual bool ValidateCustom(MISAEntity entity)
+        {
+            return true;
         }
         #endregion
     }
