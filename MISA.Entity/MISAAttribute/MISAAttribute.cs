@@ -14,8 +14,8 @@ namespace MISA.ApplicationCore.MISAAttribute
 
         public MISARequired(string fieldName)
         {
-            _message = $"Thông tin {_fieldName} không được để trống.";
             _fieldName = fieldName;
+            _message = $"Thông tin {_fieldName} không được để trống.";
         }
     }
 }

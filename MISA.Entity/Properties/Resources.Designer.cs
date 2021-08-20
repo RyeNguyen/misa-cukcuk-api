@@ -61,128 +61,47 @@ namespace MISA.Entity.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không thể xóa thông tin khách hàng, kiểm tra lại ID nhé..
+        ///   Looks up a localized string similar to Không thể xóa thông tin, kiểm tra lại ID nhé..
         /// </summary>
-        public static string messageErrorCustomerDelete_Dev {
+        public static string messageErrorDelete_Dev {
             get {
-                return ResourceManager.GetString("messageErrorCustomerDelete_Dev", resourceCulture);
+                return ResourceManager.GetString("messageErrorDelete_Dev", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không thể xóa thông tin khách hàng..
+        ///   Looks up a localized string similar to Không thể xóa thông tin..
         /// </summary>
-        public static string messageErrorCustomerDelete_User {
+        public static string messageErrorDelete_User {
             get {
-                return ResourceManager.GetString("messageErrorCustomerDelete_User", resourceCulture);
+                return ResourceManager.GetString("messageErrorDelete_User", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu khách hàng..
+        ///   Looks up a localized string similar to Mã khách hàng không được phép trùng..
         /// </summary>
-        public static string messageErrorCustomerGetAll_Dev {
+        public static string messageErrorDuplicateCodeCus {
             get {
-                return ResourceManager.GetString("messageErrorCustomerGetAll_Dev", resourceCulture);
+                return ResourceManager.GetString("messageErrorDuplicateCodeCus", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu khách hàng..
+        ///   Looks up a localized string similar to Mã nhân viên không được phép trùng..
         /// </summary>
-        public static string messageErrorCustomerGetAll_User {
+        public static string messageErrorDuplicateCodeEm {
             get {
-                return ResourceManager.GetString("messageErrorCustomerGetAll_User", resourceCulture);
+                return ResourceManager.GetString("messageErrorDuplicateCodeEm", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu khách hàng này, kiểm tra ID nhé..
+        ///   Looks up a localized string similar to Email không đúng định dạng, vui lòng kiểm tra lại..
         /// </summary>
-        public static string messageErrorCustomerGetById_Dev {
+        public static string messageErrorEmailFormat {
             get {
-                return ResourceManager.GetString("messageErrorCustomerGetById_Dev", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu khách hàng..
-        /// </summary>
-        public static string messageErrorCustomerGetById_User {
-            get {
-                return ResourceManager.GetString("messageErrorCustomerGetById_User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể thêm dữ liệu khách hàng, kiểm tra các trường nhé..
-        /// </summary>
-        public static string messageErrorCustomerInsert_Dev {
-            get {
-                return ResourceManager.GetString("messageErrorCustomerInsert_Dev", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể thêm dữ liệu khách hàng..
-        /// </summary>
-        public static string messageErrorCustomerInsert_User {
-            get {
-                return ResourceManager.GetString("messageErrorCustomerInsert_User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể cập nhật dữ liệu khách hàng, kiểm tra các trường nhé và nhớ validate..
-        /// </summary>
-        public static string messageErrorCustomerUpdate_Dev {
-            get {
-                return ResourceManager.GetString("messageErrorCustomerUpdate_Dev", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể cập nhật dữ liệu khách hàng..
-        /// </summary>
-        public static string messageErrorCustomerUpdate_User {
-            get {
-                return ResourceManager.GetString("messageErrorCustomerUpdate_User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể xóa thông tin nhân viên, kiểm tra lại ID nhé..
-        /// </summary>
-        public static string messageErrorEmployeeDelete_Dev {
-            get {
-                return ResourceManager.GetString("messageErrorEmployeeDelete_Dev", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể xóa thông tin nhân viên..
-        /// </summary>
-        public static string messageErrorEmployeeDelete_User {
-            get {
-                return ResourceManager.GetString("messageErrorEmployeeDelete_User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu nhân viên..
-        /// </summary>
-        public static string messageErrorEmployeeGetAll_Dev {
-            get {
-                return ResourceManager.GetString("messageErrorEmployeeGetAll_Dev", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không thể lấy dữ liệu nhân viên..
-        /// </summary>
-        public static string messageErrorEmployeeGetAll_User {
-            get {
-                return ResourceManager.GetString("messageErrorEmployeeGetAll_User", resourceCulture);
+                return ResourceManager.GetString("messageErrorEmailFormat", resourceCulture);
             }
         }
         
@@ -241,29 +160,110 @@ namespace MISA.Entity.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Xóa dữ liệu khách hàng thành công..
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu..
         /// </summary>
-        public static string messageSuccessCustomerDelete {
+        public static string messageErrorGetAll_Dev {
             get {
-                return ResourceManager.GetString("messageSuccessCustomerDelete", resourceCulture);
+                return ResourceManager.GetString("messageErrorGetAll_Dev", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thêm dữ liệu khách hàng thành công..
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu..
         /// </summary>
-        public static string messageSuccessCustomerInsert {
+        public static string messageErrorGetAll_User {
             get {
-                return ResourceManager.GetString("messageSuccessCustomerInsert", resourceCulture);
+                return ResourceManager.GetString("messageErrorGetAll_User", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cập nhật dữ liệu khách hàng thành công..
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu này, kiểm tra ID nhé..
         /// </summary>
-        public static string messageSuccessCustomerUpdate {
+        public static string messageErrorGetById_Dev {
             get {
-                return ResourceManager.GetString("messageSuccessCustomerUpdate", resourceCulture);
+                return ResourceManager.GetString("messageErrorGetById_Dev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu..
+        /// </summary>
+        public static string messageErrorGetById_User {
+            get {
+                return ResourceManager.GetString("messageErrorGetById_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể thêm dữ liệu, kiểm tra các trường nhé..
+        /// </summary>
+        public static string messageErrorInsert_Dev {
+            get {
+                return ResourceManager.GetString("messageErrorInsert_Dev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể thêm dữ liệu..
+        /// </summary>
+        public static string messageErrorInsert_User {
+            get {
+                return ResourceManager.GetString("messageErrorInsert_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File xls hoặc xlsx không hợp lệ..
+        /// </summary>
+        public static string messageErrorNullFile {
+            get {
+                return ResourceManager.GetString("messageErrorNullFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu phân trang khách hàng..
+        /// </summary>
+        public static string messageErrorPagingFilterCus {
+            get {
+                return ResourceManager.GetString("messageErrorPagingFilterCus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể lấy dữ liệu phân trang nhân viên..
+        /// </summary>
+        public static string messageErrorPagingFilterEm {
+            get {
+                return ResourceManager.GetString("messageErrorPagingFilterEm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể cập nhật dữ liệu, kiểm tra các trường nhé và nhớ validate..
+        /// </summary>
+        public static string messageErrorUpdate_Dev {
+            get {
+                return ResourceManager.GetString("messageErrorUpdate_Dev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể cập nhật dữ liệu..
+        /// </summary>
+        public static string messageErrorUpdate_User {
+            get {
+                return ResourceManager.GetString("messageErrorUpdate_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xóa dữ liệu thành công..
+        /// </summary>
+        public static string messageSuccessDelete {
+            get {
+                return ResourceManager.GetString("messageSuccessDelete", resourceCulture);
             }
         }
         
@@ -291,6 +291,24 @@ namespace MISA.Entity.Properties {
         public static string messageSuccessEmployeeUpdate {
             get {
                 return ResourceManager.GetString("messageSuccessEmployeeUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thêm dữ liệu thành công..
+        /// </summary>
+        public static string messageSuccessInsert {
+            get {
+                return ResourceManager.GetString("messageSuccessInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cập nhật dữ liệu thành công..
+        /// </summary>
+        public static string messageSuccessUpdate {
+            get {
+                return ResourceManager.GetString("messageSuccessUpdate", resourceCulture);
             }
         }
     }

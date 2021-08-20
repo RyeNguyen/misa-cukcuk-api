@@ -226,7 +226,7 @@ namespace MISA.Infrastructure.Repositories
         {
             using (_dbConnection = new MySqlConnection(_connectionString))
             {
-                DynamicParameters parameters = new DynamicParameters();
+                var parameters = new DynamicParameters();
 
                 parameters.Add($"@{_className}Code", entityCode);
 
@@ -234,7 +234,7 @@ namespace MISA.Infrastructure.Repositories
 
                 _dbConnection.Execute($"Proc_{_className}CheckDuplicateCode", param: parameters, commandType: CommandType.StoredProcedure);
 
-                return parameters.Get<Boolean>("@AlreadyExist");
+                return parameters.Get<bool>("@AlreadyExist");
             }
         }
         #endregion

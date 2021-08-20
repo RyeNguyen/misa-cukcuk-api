@@ -117,61 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="messageErrorCustomerDelete_Dev" xml:space="preserve">
-    <value>Không thể xóa thông tin khách hàng, kiểm tra lại ID nhé.</value>
-    <comment>Thông báo cho lập trình viên khi không xóa được dữ liệu khách hàng.</comment>
+  <data name="messageErrorDelete_Dev" xml:space="preserve">
+    <value>Không thể xóa thông tin, kiểm tra lại ID nhé.</value>
+    <comment>Thông báo cho lập trình viên khi không xóa được dữ liệu khách hàng/nhân viên.</comment>
   </data>
-  <data name="messageErrorCustomerDelete_User" xml:space="preserve">
-    <value>Không thể xóa thông tin khách hàng.</value>
-    <comment>Thông báo cho người dùng khi không xóa được dữ liệu khách hàng.</comment>
+  <data name="messageErrorDelete_User" xml:space="preserve">
+    <value>Không thể xóa thông tin.</value>
+    <comment>Thông báo cho người dùng khi không xóa được dữ liệu khách hàng/nhân viên.</comment>
   </data>
-  <data name="messageErrorCustomerGetAll_Dev" xml:space="preserve">
-    <value>Không thể lấy dữ liệu khách hàng.</value>
-    <comment>Thông báo cho lập trình viên khi không lấy được dữ liệu khách hàng.</comment>
+  <data name="messageErrorDuplicateCodeCus" xml:space="preserve">
+    <value>Mã khách hàng không được phép trùng.</value>
+    <comment>Thông báo lỗi khi mã khách hàng trùng trong hệ thống.</comment>
   </data>
-  <data name="messageErrorCustomerGetAll_User" xml:space="preserve">
-    <value>Không thể lấy dữ liệu khách hàng.</value>
-    <comment>Thông báo cho người dùng khi không lấy được dữ liệu khách hàng.</comment>
+  <data name="messageErrorDuplicateCodeEm" xml:space="preserve">
+    <value>Mã nhân viên không được phép trùng.</value>
+    <comment>Thông báo lỗi khi mã nhân viên trùng trong hệ thống.</comment>
   </data>
-  <data name="messageErrorCustomerGetById_Dev" xml:space="preserve">
-    <value>Không thể lấy dữ liệu khách hàng này, kiểm tra ID nhé.</value>
-    <comment>Thông báo cho lập trình viên khi không lấy được dữ liệu khách hàng bằng ID.</comment>
-  </data>
-  <data name="messageErrorCustomerGetById_User" xml:space="preserve">
-    <value>Không thể lấy dữ liệu khách hàng.</value>
-    <comment>Thông báo cho người dùng khi không lấy được dữ liệu khách hàng bằng ID.</comment>
-  </data>
-  <data name="messageErrorCustomerInsert_Dev" xml:space="preserve">
-    <value>Không thể thêm dữ liệu khách hàng, kiểm tra các trường nhé.</value>
-    <comment>Thông báo cho lập trình viên khi không thêm được thông tin khách hàng.</comment>
-  </data>
-  <data name="messageErrorCustomerInsert_User" xml:space="preserve">
-    <value>Không thể thêm dữ liệu khách hàng.</value>
-    <comment>Thông báo cho người dùng khi không thêm được thông tin khách hàng.</comment>
-  </data>
-  <data name="messageErrorCustomerUpdate_Dev" xml:space="preserve">
-    <value>Không thể cập nhật dữ liệu khách hàng, kiểm tra các trường nhé và nhớ validate.</value>
-    <comment>Thông báo cho lập trình viên khi không sửa được thông tin khách hàng.</comment>
-  </data>
-  <data name="messageErrorCustomerUpdate_User" xml:space="preserve">
-    <value>Không thể cập nhật dữ liệu khách hàng.</value>
-    <comment>Thông báo cho người dùng khi không sửa được thông tin khách hàng.</comment>
-  </data>
-  <data name="messageErrorEmployeeDelete_Dev" xml:space="preserve">
-    <value>Không thể xóa thông tin nhân viên, kiểm tra lại ID nhé.</value>
-    <comment>Thông báo cho lập trình viên khi không xóa được dữ liệu nhân viên.</comment>
-  </data>
-  <data name="messageErrorEmployeeDelete_User" xml:space="preserve">
-    <value>Không thể xóa thông tin nhân viên.</value>
-    <comment>Thông báo cho người dùng khi không xóa được dữ liệu nhân viên.</comment>
-  </data>
-  <data name="messageErrorEmployeeGetAll_Dev" xml:space="preserve">
-    <value>Không thể lấy dữ liệu nhân viên.</value>
-    <comment>Thông báo cho lập trình viên khi không lấy được dữ liệu nhân viên.</comment>
-  </data>
-  <data name="messageErrorEmployeeGetAll_User" xml:space="preserve">
-    <value>Không thể lấy dữ liệu nhân viên.</value>
-    <comment>Thông báo cho người dùng khi không lấy được dữ liệu nhân viên.</comment>
+  <data name="messageErrorEmailFormat" xml:space="preserve">
+    <value>Email không đúng định dạng, vui lòng kiểm tra lại.</value>
+    <comment>Thông báo lỗi khi email không đúng định dạng.</comment>
   </data>
   <data name="messageErrorEmployeeGetById_Dev" xml:space="preserve">
     <value>Không thể lấy dữ liệu nhân viên này, kiểm tra ID nhé.</value>
@@ -197,17 +161,53 @@
     <value>Không thể cập nhật dữ liệu nhân viên.</value>
     <comment>Thông báo cho người dùng khi không sửa được thông tin nhân viên.</comment>
   </data>
-  <data name="messageSuccessCustomerDelete" xml:space="preserve">
-    <value>Xóa dữ liệu khách hàng thành công.</value>
-    <comment>Thông báo khi xóa dữ liệu khách hàng thành công.</comment>
+  <data name="messageErrorGetAll_Dev" xml:space="preserve">
+    <value>Không thể lấy dữ liệu.</value>
+    <comment>Thông báo cho lập trình viên khi không lấy được dữ liệu khách hàng/nhân viên.</comment>
   </data>
-  <data name="messageSuccessCustomerInsert" xml:space="preserve">
-    <value>Thêm dữ liệu khách hàng thành công.</value>
-    <comment>Thông báo khi thêm dữ liệu khách hàng thành công.</comment>
+  <data name="messageErrorGetAll_User" xml:space="preserve">
+    <value>Không thể lấy dữ liệu.</value>
+    <comment>Thông báo cho người dùng khi không lấy được dữ liệu khách hàng/nhân viên.</comment>
   </data>
-  <data name="messageSuccessCustomerUpdate" xml:space="preserve">
-    <value>Cập nhật dữ liệu khách hàng thành công.</value>
-    <comment>Thông báo khi cập nhật dữ liệu khách hàng thành công.</comment>
+  <data name="messageErrorGetById_Dev" xml:space="preserve">
+    <value>Không thể lấy dữ liệu này, kiểm tra ID nhé.</value>
+    <comment>Thông báo cho lập trình viên khi không lấy được dữ liệu khách hàng/nhân viên bằng ID.</comment>
+  </data>
+  <data name="messageErrorGetById_User" xml:space="preserve">
+    <value>Không thể lấy dữ liệu.</value>
+    <comment>Thông báo cho người dùng khi không lấy được dữ liệu khách hàng/nhân viên bằng ID.</comment>
+  </data>
+  <data name="messageErrorInsert_Dev" xml:space="preserve">
+    <value>Không thể thêm dữ liệu, kiểm tra các trường nhé.</value>
+    <comment>Thông báo cho lập trình viên khi không thêm được thông tin khách hàng/nhân viên.</comment>
+  </data>
+  <data name="messageErrorInsert_User" xml:space="preserve">
+    <value>Không thể thêm dữ liệu.</value>
+    <comment>Thông báo cho người dùng khi không thêm được thông tin khách hàng/nhân viên.</comment>
+  </data>
+  <data name="messageErrorNullFile" xml:space="preserve">
+    <value>File xls hoặc xlsx không hợp lệ.</value>
+    <comment>Thông báo lỗi khi fie import không hợp lệ.</comment>
+  </data>
+  <data name="messageErrorPagingFilterCus" xml:space="preserve">
+    <value>Không thể lấy dữ liệu phân trang khách hàng.</value>
+    <comment>Thông báo cho người dùng khi không lấy được dữ liệu phân trang khách hàng.</comment>
+  </data>
+  <data name="messageErrorPagingFilterEm" xml:space="preserve">
+    <value>Không thể lấy dữ liệu phân trang nhân viên.</value>
+    <comment>Thông báo cho người dùng khi không lấy được dữ liệu phân trang nhân viên.</comment>
+  </data>
+  <data name="messageErrorUpdate_Dev" xml:space="preserve">
+    <value>Không thể cập nhật dữ liệu, kiểm tra các trường nhé và nhớ validate.</value>
+    <comment>Thông báo cho lập trình viên khi không sửa được thông tin khách hàng/nhân viên.</comment>
+  </data>
+  <data name="messageErrorUpdate_User" xml:space="preserve">
+    <value>Không thể cập nhật dữ liệu.</value>
+    <comment>Thông báo cho người dùng khi không sửa được thông tin khách hàng/nhân viên.</comment>
+  </data>
+  <data name="messageSuccessDelete" xml:space="preserve">
+    <value>Xóa dữ liệu thành công.</value>
+    <comment>Thông báo khi xóa dữ liệu khách hàng/nhân viên thành công.</comment>
   </data>
   <data name="messageSuccessEmployeeDelete" xml:space="preserve">
     <value>Xóa dữ liệu nhân viên thành công.</value>
@@ -220,5 +220,13 @@
   <data name="messageSuccessEmployeeUpdate" xml:space="preserve">
     <value>Cập nhật dữ liệu nhân viên thành công.</value>
     <comment>Thông báo khi cập nhật dữ liệu nhân viên thành công.</comment>
+  </data>
+  <data name="messageSuccessInsert" xml:space="preserve">
+    <value>Thêm dữ liệu thành công.</value>
+    <comment>Thông báo khi thêm dữ liệu khách hàng/nhân viên thành công.</comment>
+  </data>
+  <data name="messageSuccessUpdate" xml:space="preserve">
+    <value>Cập nhật dữ liệu thành công.</value>
+    <comment>Thông báo khi cập nhật dữ liệu khách hàng/nhân viên thành công.</comment>
   </data>
 </root>

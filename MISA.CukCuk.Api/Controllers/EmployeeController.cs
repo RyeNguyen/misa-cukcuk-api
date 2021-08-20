@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Api.Controllers
@@ -61,12 +62,12 @@ namespace MISA.CukCuk.Api.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var errorObj = new
                 {
-                    devMsg = ex.Message,
-                    userMsg = "Phân trang lỗi",
+                    devMsg = Entity.Properties.Resources.messageErrorPagingFilterEm,
+                    userMsg = Entity.Properties.Resources.messageErrorPagingFilterEm,
                 };
                 return StatusCode(500, errorObj);
             }

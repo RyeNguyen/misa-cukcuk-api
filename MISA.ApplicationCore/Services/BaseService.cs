@@ -45,6 +45,14 @@ namespace MISA.ApplicationCore.Services
             }
             else
             {
+                var errorMsg = new
+                {
+                    devMsg = Entity.Properties.Resources.messageErrorGetAll_Dev,
+                    userMsg = Entity.Properties.Resources.messageErrorGetAll_User,
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Data = errorMsg;
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorGetAll_Dev;
                 _serviceResponse.MISACode = MISACode.NotValid;
             }
             return _serviceResponse;
@@ -68,92 +76,68 @@ namespace MISA.ApplicationCore.Services
             }
             else
             {
+                var errorMsg = new
+                {
+                    devMsg = Entity.Properties.Resources.messageErrorGetById_Dev,
+                    userMsg = Entity.Properties.Resources.messageErrorGetById_User,
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Data = errorMsg;
                 _serviceResponse.MISACode = MISACode.NotValid;
-                _serviceResponse.Message = Entity.Properties.Resources.messageErrorCustomerGetById_Dev;
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorGetById_Dev;
             }
 
             return _serviceResponse;
         }
         #endregion
 
+        /// <summary>
+        /// Phương thức thêm thông tin thực thể vào DB
+        /// </summary>
+        /// <param name="entity">Thông tin cần thêm</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (17/08/2021)
         public ServiceResponse Insert(MISAEntity entity)
         {
             var commonValidate = ValidateCommon(entity);
-            if (commonValidate == false)
+            if (commonValidate.MISACode == MISACode.NotValid)
             {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = $"{_className}Code",
-                        msg = Properties.Resources.messageCheckRequired_Dev
-                    },
-                    userMsg = Properties.Resources.messageCheckRequired_User,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = msg;
-                _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                return _serviceResponse;
+                return commonValidate;
             }
 
             var customValidate = ValidateCustom(entity);
-            if (customValidate == false)
+            if (customValidate.MISACode == MISACode.NotValid)
             {
-                var msg = new
-                {
-                    devMsg = new
-                    {
-                        fieldName = $"{_className}Code",
-                        msg = "alo custom"
-                    },
-                    userMsg = "alo custom",
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = msg;
-                _serviceResponse.Message = "alo custom";
-                _serviceResponse.MISACode = MISACode.NotValid;
-                return _serviceResponse;
+                return customValidate;
             }
 
             //Thêm mới khi dữ liệu hợp lệ:
             var rowAffects = _baseRepository.Insert(entity);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
+            _serviceResponse.Data = "Số bản ghi bị ảnh hưởng: " + rowAffects;
+            _serviceResponse.Message = Entity.Properties.Resources.messageSuccessInsert;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
 
+        /// <summary>
+        /// Phương thức cập nhật dữ liệu thực thể
+        /// </summary>
+        /// <param name="entityId">ID thực thể cần sửa</param>
+        /// <param name="entity">Dữ liệu mới</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (17/08/2021)
         public ServiceResponse Update(Guid entityId, MISAEntity entity)
         {
-            //    //Lấy mã thực thể để thực hiện validate dữ liệu
-            //    var entityCode = typeof(MISAEntity).GetProperty($"{_className}Code").ToString();
-
-            //    //Validate dữ liệu, nếu dữ liệu chưa hợp lệ thì trả về mô tả lỗi:          
-            //    //Check trùng mã:             
-            //    var entityToCheck = _baseRepository.GetByCode(entityCode);
-            //    if (entityToCheck != null)
-            //    {
-            //        var msg = new
-            //        {
-            //            devMsg = new
-            //            {
-            //                fieldName = $"{_className}Code",
-            //                msg = Properties.Resources.messageCheckCodeDuplicate_Dev
-            //            },
-            //            userMsg = Properties.Resources.messageCheckCodeDuplicate_User,
-            //            Code = MISACode.NotValid
-            //        };
-            //        _serviceResponse.Data = msg;
-            //        _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
-            //        _serviceResponse.MISACode = MISACode.NotValid;
-            //        return _serviceResponse;
-            //    }
+            var customValidate = ValidateCustom(entity);
+            if (customValidate.MISACode == MISACode.NotValid)
+            {
+                return customValidate;
+            }
 
             //Sửa thông tin khi dữ liệu hợp lệ:
             var rowAffects = _baseRepository.Update(entityId, entity);
-            _serviceResponse.Data = rowAffects;
-            _serviceResponse.Message = Properties.Resources.messageInsertSuccess;
+            _serviceResponse.Data = "Số bản ghi bị ảnh hưởng: " + rowAffects;
+            _serviceResponse.Message = Entity.Properties.Resources.messageSuccessUpdate;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
@@ -170,16 +154,20 @@ namespace MISA.ApplicationCore.Services
         {
             var rowAffects = _baseRepository.Delete(entityIds);
             _serviceResponse.Data = rowAffects;          
-            _serviceResponse.Message = Entity.Properties.Resources.messageSuccessCustomerDelete;
+            _serviceResponse.Message = Entity.Properties.Resources.messageSuccessDelete;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
 
-        private bool ValidateCommon(MISAEntity entity)
+        /// <summary>
+        /// Phương thức kiểm tra dữ liệu chung
+        /// </summary>
+        /// <param name="entity">Dữ liệu thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (18/08/2021)
+        private ServiceResponse ValidateCommon(MISAEntity entity)
         {
-            var isValid = true;
             //Thực hiện validate:
-
             //Bắt buộc nhập:
             //1. Lấy thông tin các property:
             var properties = typeof(MISAEntity).GetProperties();
@@ -198,19 +186,28 @@ namespace MISA.ApplicationCore.Services
                     var errorMessage = (propMISARequired[0] as MISARequired)._message;
                     if (prop.PropertyType == typeof(string) && (propValue == null || propValue.ToString() == string.Empty))
                     {
-                        isValid = false;
+                        _serviceResponse.MISACode = MISACode.NotValid;
                         _serviceResponse.Message = errorMessage;
-                        return isValid;
+                        _serviceResponse.Data = errorMessage;
+                        return _serviceResponse;
                     }
                 }
             }
 
-            return isValid;
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
         }
 
-        protected virtual bool ValidateCustom(MISAEntity entity)
+        /// <summary>
+        /// Phương thức kiểm tra dữ liệu riêng
+        /// </summary>
+        /// <param name="entity">Dữ liệu thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (18/08/2021)
+        protected virtual ServiceResponse ValidateCustom(MISAEntity entity)
         {
-            return true;
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
         }
         #endregion
     }

@@ -64,6 +64,11 @@ namespace MISA.Infrastructure.Models
         public Guid? CustomerGroupId { get; set; }
 
         /// <summary>
+        /// Tên nhóm khách hàng
+        /// </summary>
+        public string CustomerGroupName { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public double DebitAmount { get; set; }
@@ -87,6 +92,8 @@ namespace MISA.Infrastructure.Models
         /// 
         /// </summary>
         public bool IsStopFollow { get; set; } = false;
+
+        public List<string> ImportErrors { get; set; } = new List<string>();
         #endregion
     }
 }

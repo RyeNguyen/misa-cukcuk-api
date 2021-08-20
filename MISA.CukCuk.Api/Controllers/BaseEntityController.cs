@@ -40,18 +40,24 @@ namespace MISA.CukCuk.Api.Controllers
             try
             {
                 var entities = _baseService.GetAll();
-                return Ok(entities.Data);
+                if (entities.MISACode == MISACode.isValid)
+                {
+                    return Ok(entities.Data);
+                }
+                else
+                {
+                    return BadRequest(entities.Data);
+                }
             }
             catch (Exception)
             {
-                var entities = _baseService.GetAll();
                 var errorObj = new
                 {
-                    devMsg = Properties.Resources.messageGetCustomers_Dev,
-                    userMsg = Properties.Resources.messageGetCustomers_User,
+                    devMsg = Entity.Properties.Resources.messageErrorGetAll_Dev,
+                    userMsg = Entity.Properties.Resources.messageErrorGetAll_User,
                     Code = MISACode.NotValid
                 };
-                return StatusCode(500, errorObj);
+                return BadRequest(errorObj);
             }
         }
 
@@ -70,7 +76,7 @@ namespace MISA.CukCuk.Api.Controllers
 
                 if (entity.MISACode == MISACode.isValid)
                 {
-                    return StatusCode(200, entity.Data);
+                    return Ok(entity.Data);
                 }
                 else
                 {
@@ -81,8 +87,8 @@ namespace MISA.CukCuk.Api.Controllers
             {
                 var errorObj = new
                 {
-                    devMsg = Properties.Resources.messageGetCustomerById_Dev,
-                    userMsg = Properties.Resources.messageGetCustomerById_User,
+                    devMsg = Entity.Properties.Resources.messageErrorGetById_Dev,
+                    userMsg = Entity.Properties.Resources.messageErrorGetById_User,
                     Code = MISACode.NotValid
                 };
                 return BadRequest(errorObj);
@@ -107,7 +113,7 @@ namespace MISA.CukCuk.Api.Controllers
 
             if (insertResult.MISACode == MISACode.isValid && (int)insertResult.Data > 0)
             {
-                return Created(Properties.Resources.messageInsertSuccess, insertResult.Data);
+                return Created(Entity.Properties.Resources.messageSuccessInsert, insertResult.Data);
             }
             else
             {
@@ -134,7 +140,7 @@ namespace MISA.CukCuk.Api.Controllers
 
             if (updateResult.MISACode == MISACode.isValid && (int)updateResult.Data > 0)
             {
-                return Created(Properties.Resources.messageInsertSuccess, updateResult.Data);
+                return Created(Entity.Properties.Resources.messageSuccessUpdate, updateResult.Data);
             }
             else
             {
@@ -160,7 +166,7 @@ namespace MISA.CukCuk.Api.Controllers
 
             if (deleteResult.MISACode == MISACode.isValid && (int)deleteResult.Data > 0)
             {
-                return StatusCode(200, Properties.Resources.messageInsertSuccess);
+                return StatusCode(200, Entity.Properties.Resources.messageSuccessDelete);
             }
             else
             {
