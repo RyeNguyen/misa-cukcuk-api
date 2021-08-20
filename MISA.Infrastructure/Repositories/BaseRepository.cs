@@ -14,8 +14,6 @@ namespace MISA.Infrastructure.Repositories
     public class BaseRepository<MISAEntity> : IBaseRepository<MISAEntity>
     {
         #region Fields
-        //Khởi tạo kết nối với DB
-        
         protected readonly string _connectionString;
         protected IDbConnection _dbConnection;
         protected IConfiguration _configuration;
@@ -121,8 +119,7 @@ namespace MISA.Infrastructure.Repositories
             {
                 //Khai báo dynamic param:
                 var dynamicParams = new DynamicParameters();
-                var newId = Guid.NewGuid();
-
+               
                 var columnsName = string.Empty;
                 var columnsParam = string.Empty;
 
@@ -141,25 +138,11 @@ namespace MISA.Infrastructure.Repositories
                     //Lấy kiểu dữ liệu của prop:
                     var propType = prop.PropertyType;
 
-                    //Thêm param tương ứng với mỗi property của đối tượng:
-                    //if (propName == $"{_className}Id")
-                    //{
-                    //    dynamicParams.Add($"@{propName}", newId);
-                    //} 
-                    //else
-                    //{
-                    //    dynamicParams.Add($"@{propName}", propValue);
-                    //}
-
                     dynamicParams.Add($"@{propName}", propValue);
 
                     columnsName += $"{propName},";
                     columnsParam += $"@{propName},";
                 }
-
-                //Loại ký tự thừa ở cuối khỏi hai cột:
-                //columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-                //columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
 
                 var rowAffects = _dbConnection.Execute($"Proc_{_className}Insert", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
@@ -237,7 +220,23 @@ namespace MISA.Infrastructure.Repositories
 
                 return rowAffects;
             }
-        }              
+        }  
+        
+        public bool CheckDuplicateCode(string entityCode)
+        {
+            using (_dbConnection = new MySqlConnection(_connectionString))
+            {
+                DynamicParameters parameters = new DynamicParameters();
+
+                parameters.Add($"@{_className}Code", entityCode);
+
+                parameters.Add("@AlreadyExist", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+
+                _dbConnection.Execute($"Proc_{_className}CheckDuplicateCode", param: parameters, commandType: CommandType.StoredProcedure);
+
+                return parameters.Get<Boolean>("@AlreadyExist");
+            }
+        }
         #endregion
     }
 }

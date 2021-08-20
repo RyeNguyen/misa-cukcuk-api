@@ -33,6 +33,18 @@ namespace MISA.ApplicationCore.Services
             var isValid = false;
 
             //Check trùng mã:
+            var checkCode = _employeeRepository.CheckDuplicateCode(employee.EmployeeCode);
+            if (checkCode == false)
+            {
+                var errorObj = new
+                {
+                    userMsg = "Trùng mã",
+                };
+                isValid = false;
+                _serviceResponse.MISACode = MISACode.NotValid;
+                _serviceResponse.Data = errorObj;
+                return isValid;
+            }
 
             //Check Email:
             var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";

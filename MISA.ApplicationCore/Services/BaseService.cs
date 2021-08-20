@@ -78,8 +78,8 @@ namespace MISA.ApplicationCore.Services
 
         public ServiceResponse Insert(MISAEntity entity)
         {
-            var check = ValidateCommon(entity);
-            if (check == false)
+            var commonValidate = ValidateCommon(entity);
+            if (commonValidate == false)
             {
                 var msg = new
                 {
@@ -93,6 +93,25 @@ namespace MISA.ApplicationCore.Services
                 };
                 _serviceResponse.Data = msg;
                 _serviceResponse.Message = Properties.Resources.messageCheckCodeDuplicate_Dev;
+                _serviceResponse.MISACode = MISACode.NotValid;
+                return _serviceResponse;
+            }
+
+            var customValidate = ValidateCustom(entity);
+            if (customValidate == false)
+            {
+                var msg = new
+                {
+                    devMsg = new
+                    {
+                        fieldName = $"{_className}Code",
+                        msg = "alo custom"
+                    },
+                    userMsg = "alo custom",
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Data = msg;
+                _serviceResponse.Message = "alo custom";
                 _serviceResponse.MISACode = MISACode.NotValid;
                 return _serviceResponse;
             }
@@ -176,10 +195,11 @@ namespace MISA.ApplicationCore.Services
                 var propMISARequired = prop.GetCustomAttributes(typeof(MISARequired), true);
                 if (propMISARequired.Length > 0)
                 {
+                    var errorMessage = (propMISARequired[0] as MISARequired)._message;
                     if (prop.PropertyType == typeof(string) && (propValue == null || propValue.ToString() == string.Empty))
                     {
                         isValid = false;
-                        _serviceResponse.Message = "Thông tin này không được phép để trống.";
+                        _serviceResponse.Message = errorMessage;
                         return isValid;
                     }
                 }

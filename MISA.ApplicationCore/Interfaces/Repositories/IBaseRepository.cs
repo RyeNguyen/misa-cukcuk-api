@@ -55,5 +55,13 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (16/08/2021)
         int Delete(List<Guid> entityIds);
+
+        /// <summary>
+        /// Kiểm tra trùng mã
+        /// </summary>
+        /// <param name="entityCode">Mã thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (20/08/2021)
+        bool CheckDuplicateCode(string entityCode);
     }
 }

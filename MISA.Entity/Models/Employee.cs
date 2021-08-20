@@ -17,7 +17,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Mã nhân viên
         /// </summary>
-        [MISARequired]
+        [MISARequired("Mã nhân viên")]
         public string EmployeeCode { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Họ và tên nhân viên
         /// </summary>
-        [MISARequired]
+        [MISARequired("Họ và tên")]
         public string FullName { get; set; }
 
         /// <summary>
@@ -49,13 +49,13 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Số điện thoại nhân viên
         /// </summary>
-        [MISARequired]
+        [MISARequired("Số điện thoại")]
         public string PhoneNumber { get; set; }
 
         /// <summary>
         /// Email nhân viên
         /// </summary>
-        [MISARequired]
+        [MISARequired("Email")]
         public string Email { get; set; }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Số cmnd/căn cước
         /// </summary>
-        [MISARequired]
+        [MISARequired("Số CMND")]
         public string IdentityNumber { get; set; }
 
         /// <summary>
