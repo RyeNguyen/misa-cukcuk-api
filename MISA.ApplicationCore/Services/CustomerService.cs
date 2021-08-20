@@ -71,95 +71,106 @@ namespace MISA.ApplicationCore
                     for (int column = 1; column <= columnCount; column++)
                     {
                         var itemToCheck = worksheet.Cells[row, column].Value;
+                        var columnHeader = worksheet.Cells[2, column].Value.ToString().Trim();
 
-                        switch (worksheet.Cells[2, column].Value.ToString().Trim())
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCode)
                         {
-                            case "Mã khách hàng (*)":
-                                
-                                if (itemToCheck is null or "")
-                                {
-                                    var errorMsg = "Mã khách hàng không được phép để trống.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else if (CheckDuplicateCode(itemToCheck.ToString().Trim()))
-                                {
-                                    var errorMsg = "Mã khách hàng đã tồn tại trong hệ thống.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else
-                                {
-                                    customer.CustomerCode = itemToCheck.ToString().Trim();
-                                }
-                                break;
+                            if (itemToCheck is null or "")
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameCode.Replace("(*)", "") + 
+                                    Entity.Properties.ImportScenarioVN.messageErrorRequired;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else if (CheckDuplicateCode(itemToCheck.ToString().Trim()))
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameCode + Entity.Properties.ImportScenarioVN.messageErrorDuplicateSystem;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else
+                            {
+                                customer.CustomerCode = itemToCheck.ToString().Trim();
+                            }
+                        }
 
-                            case "Tên khách hàng (*)":
-                                if (itemToCheck is null or "")
-                                {
-                                    var errorMsg = "Tên khách hàng không được phép để trống.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else
-                                {
-                                    customer.FullName = itemToCheck.ToString().Trim();
-                                }
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameName)
+                        {
+                            if (itemToCheck is null or "")
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameName.Replace("(*)", "") +
+                                    Entity.Properties.ImportScenarioVN.messageErrorRequired;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else
+                            {
+                                customer.FullName = itemToCheck.ToString().Trim();
+                            }
+                        }
 
-                            case "Mã thẻ thành viên":
-                                customer.MemberCard = itemToCheck.ToString().Trim();
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCard)
+                        {
+                            customer.MemberCard = itemToCheck?.ToString().Trim();
+                        }
 
-                            case "Nhóm khách hàng":
-                                customer.CustomerGroupName = itemToCheck.ToString().Trim();
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameGroup)
+                        {
+                            customer.CustomerGroupName = itemToCheck?.ToString().Trim();
+                        }
 
-                            case "Số điện thoại":
-                                if (itemToCheck is null or "")
-                                {
-                                    var errorMsg = "Số điện thoại không được phép để trống.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else
-                                {
-                                    customer.PhoneNumber = itemToCheck.ToString().Trim().Replace(".", "");
-                                }
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNamePhone)
+                        {
+                            if (itemToCheck is null or "")
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNamePhone +
+                                    Entity.Properties.ImportScenarioVN.messageErrorRequired;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else
+                            {
+                                customer.PhoneNumber = itemToCheck.ToString().Trim().Replace(".", "");
+                            }
+                        }
 
-                            case "Ngày sinh":
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameDob)
+                        {
+                            customer.DateOfBirth = FormatDate(itemToCheck);
+                        }
 
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCompany)
+                        {
+                            customer.CompanyName = itemToCheck?.ToString().Trim();
+                        }
 
-                            case "Tên công ty":
-                                customer.CompanyName = itemToCheck.ToString().Trim();
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameTax)
+                        {
+                            customer.CompanyTaxCode = itemToCheck?.ToString().Trim();
+                        }
 
-                            case "Mã số thuế":
-                                customer.CompanyTaxCode = itemToCheck.ToString().Trim();
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameEmail)
+                        {
+                            if (itemToCheck is null or "")
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameEmail +
+                                    Entity.Properties.ImportScenarioVN.messageErrorRequired;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else if (CheckEmailFormat(itemToCheck.ToString().Trim()) == false)
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameEmail +
+                                    Entity.Properties.ImportScenarioVN.messageErrorFormat;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else
+                            {
+                                customer.Email = itemToCheck.ToString().Trim();
+                            }
+                        }
 
-                            case "Email":
-                                if (itemToCheck is null or "")
-                                {
-                                    var errorMsg = "Email không được phép để trống.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else if (CheckEmailFormat(itemToCheck.ToString().Trim()) == false)
-                                {
-                                    var errorMsg = "Email không đúng định dạng.";
-                                    customer.ImportErrors.Add(errorMsg);
-                                }
-                                else
-                                {
-                                    customer.Email = itemToCheck.ToString().Trim();
-                                }
-                                break;
-
-                            case "Địa chỉ":
-                                customer.Address = itemToCheck.ToString().Trim();
-                                break;
+                        if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameAddress)
+                        {
+                            customer.Address = itemToCheck?.ToString().Trim();
                         }
                     }
 
-                    Console.WriteLine(customer); 
                     customers.Add(customer);
                 }
             }
@@ -225,7 +236,31 @@ namespace MISA.ApplicationCore
             return _customerRepository.CheckDuplicateCode(code);
         }
 
-        private bool CheckEmailFormat(string email)
+        private static DateTime? FormatDate(object date)
+        {
+            if (date != null)
+            {
+                string dateString = date.ToString().Trim();
+                if (Regex.IsMatch(dateString, @"^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$"))
+                {
+                    return DateTime.ParseExact(dateString, "dd/MM/yyyy", null);
+                }
+
+                if (Regex.IsMatch(dateString, @"^(((0)[0-9])|((1)[0-2]))(\/)\d{4}$"))
+                {
+                    return DateTime.ParseExact("01/" + dateString, "dd/MM/yyyy", null);
+                }
+
+                if (Regex.IsMatch(dateString, @"^\d{4}$"))
+                {
+                    return DateTime.ParseExact("01/01/" + dateString, "dd/MM/yyyy", null);
+                }
+            }
+
+            return null;
+        }
+
+        private static bool CheckEmailFormat(string email)
         {
             var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
