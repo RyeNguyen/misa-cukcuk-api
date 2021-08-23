@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MISA.Infrastructure.Models
 {
-    public class CustomersGroup : BaseEntity
+    public class CustomerGroup : BaseEntity
     {
         #region Property
         /// <summary>

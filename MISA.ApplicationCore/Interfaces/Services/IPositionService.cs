@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.ApplicationCore.Interfaces.Repositories
+namespace MISA.ApplicationCore.Interfaces.Services
 {
-    public interface ICustomerGroupRepository : IBaseRepository<CustomerGroup>
+    public interface IPositionService : IBaseService<Position>
     {
     }
 }

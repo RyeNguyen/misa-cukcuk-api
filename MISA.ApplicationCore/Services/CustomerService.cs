@@ -16,8 +16,8 @@ namespace MISA.ApplicationCore
 {
     public class CustomerService : BaseService<Customer>, ICustomerService
     {
-        readonly ICustomerRepository _customerRepository;
-        readonly ServiceResponse _serviceResponse;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly ServiceResponse _serviceResponse;
 
         public CustomerService(IBaseRepository<Customer> baseRepository,
             ICustomerRepository customerRepository) : base(baseRepository)
@@ -73,6 +73,7 @@ namespace MISA.ApplicationCore
                         var itemToCheck = worksheet.Cells[row, column].Value;
                         var columnHeader = worksheet.Cells[2, column].Value.ToString().Trim();
 
+                        //Kiểm tra mã khách hàng
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCode)
                         {
                             if (itemToCheck is null or "")
@@ -81,9 +82,16 @@ namespace MISA.ApplicationCore
                                     Entity.Properties.ImportScenarioVN.messageErrorRequired;
                                 customer.ImportErrors.Add(errorMsg);
                             }
+                            else if (CheckDuplicateInList(customers, "CustomerCode", itemToCheck.ToString().Trim()) != -1)
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameCode.Replace("(*)", "") +
+                                    Entity.Properties.ImportScenarioVN.messageErrorDuplicateList;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
                             else if (CheckDuplicateCode(itemToCheck.ToString().Trim()))
                             {
-                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameCode + Entity.Properties.ImportScenarioVN.messageErrorDuplicateSystem;
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameCode
+                                    + Entity.Properties.ImportScenarioVN.messageErrorDuplicateSystem;
                                 customer.ImportErrors.Add(errorMsg);
                             }
                             else
@@ -92,6 +100,7 @@ namespace MISA.ApplicationCore
                             }
                         }
 
+                        //Kiểm tra tên khách hàng
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameName)
                         {
                             if (itemToCheck is null or "")
@@ -106,16 +115,19 @@ namespace MISA.ApplicationCore
                             }
                         }
 
+                        //Kiểm tra thẻ thành viên
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCard)
                         {
                             customer.MemberCard = itemToCheck?.ToString().Trim();
                         }
 
+                        //Kiểm tra nhóm khách hàng
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameGroup)
                         {
                             customer.CustomerGroupName = itemToCheck?.ToString().Trim();
                         }
 
+                        //Kiểm tra số điện thoại
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNamePhone)
                         {
                             if (itemToCheck is null or "")
@@ -124,33 +136,49 @@ namespace MISA.ApplicationCore
                                     Entity.Properties.ImportScenarioVN.messageErrorRequired;
                                 customer.ImportErrors.Add(errorMsg);
                             }
+                            else if (CheckDuplicateInList(customers, "PhoneNumber", itemToCheck.ToString().Trim()) != -1)
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNamePhone +
+                                    Entity.Properties.ImportScenarioVN.messageErrorDuplicateList;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
                             else
                             {
                                 customer.PhoneNumber = itemToCheck.ToString().Trim().Replace(".", "");
                             }
                         }
 
+                        //Kiểm tra ngày sinh
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameDob)
                         {
                             customer.DateOfBirth = FormatDate(itemToCheck);
                         }
 
+                        //Kiểm tra tên công ty
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCompany)
                         {
                             customer.CompanyName = itemToCheck?.ToString().Trim();
                         }
 
+                        //Kiểm tra mã số thuế
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameTax)
                         {
                             customer.CompanyTaxCode = itemToCheck?.ToString().Trim();
                         }
 
+                        //Kiểm tra email
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameEmail)
                         {
                             if (itemToCheck is null or "")
                             {
                                 var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameEmail +
                                     Entity.Properties.ImportScenarioVN.messageErrorRequired;
+                                customer.ImportErrors.Add(errorMsg);
+                            }
+                            else if (CheckDuplicateInList(customers, "Email", itemToCheck.ToString().Trim()) != -1)
+                            {
+                                var errorMsg = Entity.Properties.ImportScenarioVN.fieldNameEmail +
+                                    Entity.Properties.ImportScenarioVN.messageErrorDuplicateList;
                                 customer.ImportErrors.Add(errorMsg);
                             }
                             else if (CheckEmailFormat(itemToCheck.ToString().Trim()) == false)
@@ -165,6 +193,7 @@ namespace MISA.ApplicationCore
                             }
                         }
 
+                        //Kiểm tra địa chỉ
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameAddress)
                         {
                             customer.Address = itemToCheck?.ToString().Trim();
@@ -231,11 +260,37 @@ namespace MISA.ApplicationCore
             return _serviceResponse;
         }
 
+        /// <summary>
+        /// Hàm kiểm tra trùng mã trong hệ thống
+        /// </summary>
+        /// <param name="code">Mã khách hàng</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (20/08/2021)
         private bool CheckDuplicateCode(string code)
         {
             return _customerRepository.CheckDuplicateCode(code);
         }
 
+        /// <summary>
+        /// Kiểm tra trùng mã trong file import
+        /// </summary>
+        /// <param name="customersList">Danh sách khách hàng</param>
+        /// <param name="type">Trường cần kiểm tra</param>
+        /// <param name="item">Giá trị cần kiểm tra</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (21/08/2021)
+        private static int CheckDuplicateInList(List<Customer> customersList, string type, string item)
+        {
+            int test = customersList.FindIndex(customer => customer.GetType().GetProperty(type).GetValue(customer, null).ToString() == item);
+            return -1;
+        }
+
+        /// <summary>
+        /// Hàm định dạng ngày tháng
+        /// </summary>
+        /// <param name="date">Dữ liệu cần định dạng</param>
+        /// <returns>Dữ liệu ngày thánh đã định dạng</returns>
+        /// Author: NQMinh (20/08/2021)
         private static DateTime? FormatDate(object date)
         {
             if (date != null)
@@ -260,6 +315,12 @@ namespace MISA.ApplicationCore
             return null;
         }
 
+        /// <summary>
+        /// Kiểm tra định dạng email
+        /// </summary>
+        /// <param name="email">Dữ liệu cần kiểm tra</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (20/08/2021)
         private static bool CheckEmailFormat(string email)
         {
             var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";

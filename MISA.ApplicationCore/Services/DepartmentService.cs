@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace MISA.ApplicationCore.Services
 {
-    public class CustomerGroupService : BaseService<CustomerGroup>, ICustomerGroupService
+    public class DepartmentService : BaseService<Department>, IDepartmentService
     {
-        private readonly ICustomerGroupRepository _customerGroupRepository;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly ServiceResponse _serviceResponse;
 
-        public CustomerGroupService(IBaseRepository<CustomerGroup> baseRepository,
-            ICustomerGroupRepository customerGroupRepository) : base(baseRepository)
+        public DepartmentService(IBaseRepository<Department> baseRepository,
+            IDepartmentRepository departmentRepository) : base(baseRepository)
         {
-            _customerGroupRepository = customerGroupRepository;
+            _departmentRepository = departmentRepository;
             _serviceResponse = new ServiceResponse();
         }
     }

@@ -20,8 +20,8 @@ namespace MISA.CukCuk.Api.Controllers
     public class CustomersController : BaseEntityController<Customer>
     {
         #region Declares
-        ICustomerService _customerService;
-        ICustomerRepository _customerRepository;
+        private readonly ICustomerService _customerService;
+        private readonly ICustomerRepository _customerRepository;
         #endregion
 
         #region Constructor

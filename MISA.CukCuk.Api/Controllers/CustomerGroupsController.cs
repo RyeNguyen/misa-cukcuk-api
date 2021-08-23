@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MISA.ApplicationCore.Interfaces.Repositories;
+using MISA.ApplicationCore.Interfaces.Services;
 using MISA.Infrastructure.Models;
 using MySqlConnector;
 using System;
@@ -13,62 +15,20 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CustomerGroupsController : ControllerBase
+    public class CustomerGroupsController : BaseEntityController<CustomerGroup>
     {
-        #region Lấy toàn bộ dữ liệu nhóm khách hàng
-        [HttpGet]
-        public IActionResult GetCustomersGroup()
-        {
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            var sqlCommand = "SELECT * FROM CustomerGroup";
-
-            try
-            {
-                var customersGroup = dbConnection.Query<CustomersGroup>(sqlCommand);
-                return StatusCode(200, customersGroup);
-            } 
-            catch (Exception)
-            {
-                return StatusCode(500, "Không tìm thấy nhóm khách hàng.");
-            }
-        }
+        #region Declares
+        private readonly ICustomerGroupService _customerGroupService;
+        private readonly ICustomerGroupRepository _customerGroupRepository;
         #endregion
 
-        #region Lấy dữ liệu nhóm khách hàng theo id
-        [HttpGet("{CustomerGroupId}")]
-        public IActionResult GetCustomersGroupById(Guid customerGroupId)
+        #region Constructor
+        public CustomerGroupsController(ICustomerGroupService customerGroupService,
+            ICustomerGroupRepository customerGroupRepository) : base(customerGroupService, customerGroupRepository)
         {
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF946_NQMINH_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            var sqlCommand = $"SELECT * FROM CustomerGroup WHERE CustomerGroupId = @dynamicCustomerGroupId";
-
-            DynamicParameters parameters = new();
-            parameters.Add("@dynamicCustomerGroupId", customerGroupId);          
-
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            try
-            {
-                var customersGroup = dbConnection.QueryFirstOrDefault<CustomersGroup>(sqlCommand, param: parameters);
-                return StatusCode(200, customersGroup);
-            }
-            catch
-            {
-                return StatusCode(500, $"Không tìm thấy nhóm khách hàng có ID là {customerGroupId}");
-            }
+            _customerGroupService = customerGroupService;
+            _customerGroupRepository = customerGroupRepository;
         }
-        #endregion
-
-        #region Thêm nhóm khách hàng
         #endregion
     }
 }

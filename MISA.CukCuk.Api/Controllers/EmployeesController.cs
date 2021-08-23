@@ -60,7 +60,6 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     return NoContent();
                 }
-
             }
             catch (Exception)
             {

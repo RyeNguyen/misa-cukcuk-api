@@ -44,7 +44,6 @@ namespace MISA.Infrastructure.Repositories
                 var totalPage = parameters.Get<int>("@TotalPage");
                 var totalRecord = parameters.Get<int>("@TotalRecord");
 
-
                 var pagingData = new
                 {
                     totalPage,

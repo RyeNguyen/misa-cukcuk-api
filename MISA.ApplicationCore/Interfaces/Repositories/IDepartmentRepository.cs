@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MISA.ApplicationCore.Interfaces.Repositories
 {
-    public interface ICustomerGroupRepository : IBaseRepository<CustomerGroup>
+    public interface IDepartmentRepository : IBaseRepository<Department>
     {
     }
 }
