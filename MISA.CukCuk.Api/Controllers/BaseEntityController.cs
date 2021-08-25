@@ -155,7 +155,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (18/08/2021)
         [HttpPost("delete")]
-        public IActionResult Delete([FromBody]List<string> entityIds)
+        public IActionResult Delete([FromBody]List<Guid> entityIds)
         {
             var deleteResult = _baseService.Delete(entityIds);
 

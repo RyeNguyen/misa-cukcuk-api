@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MISA.Infrastructure.Repositories
 {
@@ -23,7 +21,7 @@ namespace MISA.Infrastructure.Repositories
         #region Constructor
         public BaseRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("MisaCukCukLocal");
+            _connectionString = configuration.GetConnectionString("MisaCukCuk");
             _className = typeof(MISAEntity).Name;
         }
         #endregion
@@ -208,22 +206,22 @@ namespace MISA.Infrastructure.Repositories
         /// <param name="entityIds">Danh sách ID của thực thể cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (16/08/2021)
-        public int Delete(List<string> entityIds)
+        public int Delete(List<Guid> entityIds)
         {
             using(_dbConnection = new MySqlConnection(_connectionString))
             {
-                var parameters = new DynamicParameters();
                 var idString = string.Empty; 
 
                 foreach(var entityId in entityIds)
                 {
-                    idString += $"{entityId},";
+                    idString += $"'{entityId}',";
                 }
 
                 idString = idString.Remove(idString.Length - 1);
-                parameters.Add($"@{_className}IdList", idString);
 
-                var rowAffects = _dbConnection.Execute($"Proc_{_className}Delete", param: parameters, commandType: CommandType.StoredProcedure);
+                var sqlCommand = $"DELETE FROM {_className} WHERE {_className}Id IN ({idString})";
+
+                var rowAffects = _dbConnection.Execute(sqlCommand);
 
                 return rowAffects;
             }

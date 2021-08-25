@@ -157,7 +157,7 @@ namespace MISA.ApplicationCore.Services
         /// <param name="entityIds">Danh sách ID thực thể cần xóa</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (16/08/2021)
-        public ServiceResponse Delete(List<string> entityIds)
+        public ServiceResponse Delete(List<Guid> entityIds)
         {
             var rowAffects = _baseRepository.Delete(entityIds);
             _serviceResponse.Data = rowAffects;          

@@ -54,7 +54,7 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <param name="entityIds">Danh sách ID các thực thể cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (16/08/2021)
-        int Delete(List<string> entityIds);
+        int Delete(List<Guid> entityIds);
 
         /// <summary>
         /// Kiểm tra trùng mã
