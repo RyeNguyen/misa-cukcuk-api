@@ -47,6 +47,6 @@ namespace MISA.ApplicationCore.Interfaces.Services
         /// <param name="entityIds">Danh sách ID các thực thể</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (16/08/2021)
-        ServiceResponse Delete(List<Guid> entityIds);
+        ServiceResponse Delete(List<string> entityIds);
     }
 }

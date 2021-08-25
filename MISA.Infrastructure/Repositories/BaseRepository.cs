@@ -23,7 +23,7 @@ namespace MISA.Infrastructure.Repositories
         #region Constructor
         public BaseRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("MisaCukCuk");
+            _connectionString = configuration.GetConnectionString("MisaCukCukLocal");
             _className = typeof(MISAEntity).Name;
         }
         #endregion
@@ -184,7 +184,7 @@ namespace MISA.Infrastructure.Repositories
                     var propType = prop.PropertyType;
 
                     //Thêm param tương ứng với mỗi property của đối tượng:
-                    if (propName != $"{_className}Id" && propName != $"{_className}Code" && propValue != null)
+                    if (propName != $"{_className}Id" && propValue != null)
                     {
                         dynamicParams.Add($"@{propName}", propValue);
 
@@ -208,13 +208,20 @@ namespace MISA.Infrastructure.Repositories
         /// <param name="entityIds">Danh sách ID của thực thể cần xóa</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
         /// Author: NQMinh (16/08/2021)
-        public int Delete(List<Guid> entityIds)
+        public int Delete(List<string> entityIds)
         {
             using(_dbConnection = new MySqlConnection(_connectionString))
             {
                 var parameters = new DynamicParameters();
+                var idString = string.Empty; 
 
-                parameters.Add($"@{_className}Ids", entityIds);
+                foreach(var entityId in entityIds)
+                {
+                    idString += $"{entityId},";
+                }
+
+                idString = idString.Remove(idString.Length - 1);
+                parameters.Add($"@{_className}IdList", idString);
 
                 var rowAffects = _dbConnection.Execute($"Proc_{_className}Delete", param: parameters, commandType: CommandType.StoredProcedure);
 
@@ -222,6 +229,12 @@ namespace MISA.Infrastructure.Repositories
             }
         }  
         
+        /// <summary>
+        /// Kiểm tra mã thực thể có bị trùng trong hệ thống không
+        /// </summary>
+        /// <param name="entityCode">Mã thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (20/08/2021)
         public bool CheckDuplicateCode(string entityCode)
         {
             using (_dbConnection = new MySqlConnection(_connectionString))

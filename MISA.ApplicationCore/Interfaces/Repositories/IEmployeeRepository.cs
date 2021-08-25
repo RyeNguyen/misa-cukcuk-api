@@ -20,5 +20,13 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// <returns>Dữ liệu phân trang</returns>
         /// Author: NQMinh (19/08/2021)
         public object Pagination(string employeeFilter, Guid? departmentId, Guid? positionId, int pageIndex, int pageSize);
+
+        /// <summary>
+        /// Phương thức kiểm tra số CMND trùng cho nhân viên
+        /// </summary>
+        /// <param name="identityNumber">Số CMND</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (24/08/2021)
+        bool CheckDuplicateIdentity(string identityNumber);
     }
 }

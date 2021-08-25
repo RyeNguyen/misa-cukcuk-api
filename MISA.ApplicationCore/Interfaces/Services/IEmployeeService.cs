@@ -22,6 +22,6 @@ namespace MISA.ApplicationCore.Interfaces.Services
         /// <param name="pageSize">Số bản ghi một trang</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (19/08/2021)
-        ServiceResponse Pagination(string employeeFilter, Guid? departmentId, Guid? positionId, int pageIndex, int pageSize);
+        public ServiceResponse Pagination(string employeeFilter, Guid? departmentId, Guid? positionId, int pageIndex, int pageSize);
     }
 }

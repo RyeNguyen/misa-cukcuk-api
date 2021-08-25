@@ -125,13 +125,21 @@
     <value>Không thể xóa thông tin.</value>
     <comment>Thông báo cho người dùng khi không xóa được dữ liệu khách hàng/nhân viên.</comment>
   </data>
+  <data name="messageErrorDuplicateCode" xml:space="preserve">
+    <value>Mã đã tồn tại trong hệ thống, vui lòng kiểm tra lại.</value>
+    <comment>Thông báo lỗi khi trùng mã trong hệ thống.</comment>
+  </data>
   <data name="messageErrorDuplicateCodeCus" xml:space="preserve">
-    <value>Mã khách hàng không được phép trùng.</value>
+    <value>Mã khách hàng đã tồn tại trong hệ thống.</value>
     <comment>Thông báo lỗi khi mã khách hàng trùng trong hệ thống.</comment>
   </data>
   <data name="messageErrorDuplicateCodeEm" xml:space="preserve">
-    <value>Mã nhân viên không được phép trùng.</value>
+    <value>Mã nhân viên đã tồn tại trong hệ thống.</value>
     <comment>Thông báo lỗi khi mã nhân viên trùng trong hệ thống.</comment>
+  </data>
+  <data name="messageErrorDuplicateIdentityEm" xml:space="preserve">
+    <value>Số CMND của nhân viên đã tồn tại trong hệ thống.</value>
+    <comment>Thông báo khi số CMND đã trùng trong hệ thống.</comment>
   </data>
   <data name="messageErrorEmailFormat" xml:space="preserve">
     <value>Email không đúng định dạng, vui lòng kiểm tra lại.</value>
@@ -208,14 +216,6 @@
   <data name="messageSuccessDelete" xml:space="preserve">
     <value>Xóa dữ liệu thành công.</value>
     <comment>Thông báo khi xóa dữ liệu khách hàng/nhân viên thành công.</comment>
-  </data>
-  <data name="messageSuccessEmployeeDelete" xml:space="preserve">
-    <value>Xóa dữ liệu nhân viên thành công.</value>
-    <comment>Thông báo khi xóa dữ liệu nhân viên thành công.</comment>
-  </data>
-  <data name="messageSuccessEmployeeInsert" xml:space="preserve">
-    <value>Thêm dữ liệu nhân viên thành công.</value>
-    <comment>Thông báo khi thêm dữ liệu nhân viên thành công.</comment>
   </data>
   <data name="messageSuccessEmployeeUpdate" xml:space="preserve">
     <value>Cập nhật dữ liệu nhân viên thành công.</value>

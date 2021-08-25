@@ -76,7 +76,7 @@ namespace MISA.Infrastructure.Models
         /// <summary>
         /// Số thẻ thành viên
         /// </summary>
-        public string MemberCard { get; set; }
+        public string MemberCardCode { get; set; }
 
         /// <summary>
         /// Tên công ty

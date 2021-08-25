@@ -79,7 +79,16 @@ namespace MISA.Entity.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã khách hàng không được phép trùng..
+        ///   Looks up a localized string similar to Mã đã tồn tại trong hệ thống, vui lòng kiểm tra lại..
+        /// </summary>
+        public static string messageErrorDuplicateCode {
+            get {
+                return ResourceManager.GetString("messageErrorDuplicateCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã khách hàng đã tồn tại trong hệ thống..
         /// </summary>
         public static string messageErrorDuplicateCodeCus {
             get {
@@ -88,11 +97,20 @@ namespace MISA.Entity.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã nhân viên không được phép trùng..
+        ///   Looks up a localized string similar to Mã nhân viên đã tồn tại trong hệ thống..
         /// </summary>
         public static string messageErrorDuplicateCodeEm {
             get {
                 return ResourceManager.GetString("messageErrorDuplicateCodeEm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số CMND của nhân viên đã tồn tại trong hệ thống..
+        /// </summary>
+        public static string messageErrorDuplicateIdentityEm {
+            get {
+                return ResourceManager.GetString("messageErrorDuplicateIdentityEm", resourceCulture);
             }
         }
         
@@ -264,24 +282,6 @@ namespace MISA.Entity.Properties {
         public static string messageSuccessDelete {
             get {
                 return ResourceManager.GetString("messageSuccessDelete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Xóa dữ liệu nhân viên thành công..
-        /// </summary>
-        public static string messageSuccessEmployeeDelete {
-            get {
-                return ResourceManager.GetString("messageSuccessEmployeeDelete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Thêm dữ liệu nhân viên thành công..
-        /// </summary>
-        public static string messageSuccessEmployeeInsert {
-            get {
-                return ResourceManager.GetString("messageSuccessEmployeeInsert", resourceCulture);
             }
         }
         

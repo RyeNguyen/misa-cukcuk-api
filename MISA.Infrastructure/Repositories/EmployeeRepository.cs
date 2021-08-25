@@ -54,5 +54,27 @@ namespace MISA.Infrastructure.Repositories
                 return pagingData;
             }
         }
+
+        /// <summary>
+        /// Hàm kiểm tra nhân viên có trùng số CMND hay không
+        /// </summary>
+        /// <param name="identityNumber">Số CMND</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (24/08/2021)
+        public bool CheckDuplicateIdentity(string identityNumber)
+        {
+            using (_dbConnection = new MySqlConnection(_connectionString))
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add($"@IdentityNumber", identityNumber);
+
+                parameters.Add("@AlreadyExist", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+
+                _dbConnection.Execute($"Proc_EmployeeCheckDuplicateIdentity", param: parameters, commandType: CommandType.StoredProcedure);
+
+                return parameters.Get<bool>("@AlreadyExist");
+            }
+        }
     }
 }

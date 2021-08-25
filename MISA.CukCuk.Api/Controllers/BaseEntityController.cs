@@ -128,7 +128,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// <param name="entity">Thông tin mới</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (18/08/2021)
-        [HttpPut("{entityId}")]
+        [HttpPatch("{entityId}")]
         public IActionResult Update(Guid entityId, MISAEntity entity)
         {
             var updateResult = _baseService.Update(entityId, entity);
@@ -154,8 +154,8 @@ namespace MISA.CukCuk.Api.Controllers
         /// <param name="entityIds">Danh sách ID các thực thể cần xóa</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (18/08/2021)
-        [HttpDelete("{entityId}")]
-        public IActionResult Delete(List<Guid> entityIds)
+        [HttpPost("delete")]
+        public IActionResult Delete([FromBody]List<string> entityIds)
         {
             var deleteResult = _baseService.Delete(entityIds);
 

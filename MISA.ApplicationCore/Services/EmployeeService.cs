@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using MISA.ApplicationCore.Entities;
+﻿using MISA.ApplicationCore.Entities;
 using MISA.ApplicationCore.Interfaces.Repositories;
 using MISA.ApplicationCore.Interfaces.Services;
 using MISA.Entity;
 using MISA.Infrastructure.Models;
-using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace MISA.ApplicationCore.Services
 {
@@ -51,38 +45,21 @@ namespace MISA.ApplicationCore.Services
         /// Author: NQMinh (19/08/2021)
         protected override ServiceResponse ValidateCustom(Employee employee)
         {
-            //Check trùng mã:
-            var checkCode = _employeeRepository.CheckDuplicateCode(employee.EmployeeCode);
-            if (checkCode == false)
+            var checkedEmployee = _employeeRepository.GetById(employee.EmployeeId);
+
+            //Check trùng số CMND
+            var checkIdentity = _employeeRepository.CheckDuplicateIdentity(employee.IdentityNumber);
+            if (checkIdentity == true && checkedEmployee == null)
             {
                 var errorObj = new
                 {
-                    devMsg = Entity.Properties.Resources.messageErrorDuplicateCodeEm,
-                    userMsg = Entity.Properties.Resources.messageErrorDuplicateCodeEm,
+                    devMsg = Entity.Properties.Resources.messageErrorDuplicateIdentityEm,
+                    userMsg = Entity.Properties.Resources.messageErrorDuplicateIdentityEm,
                     Code = MISACode.NotValid
                 };
                 _serviceResponse.Data = errorObj;
                 _serviceResponse.MISACode = MISACode.NotValid;
-                _serviceResponse.Message = Entity.Properties.Resources.messageErrorDuplicateCodeEm;
-                return _serviceResponse;
-            }
-
-            //Check Email:
-            var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-
-            var isMatch = Regex.IsMatch(employee.Email, emailFormat, RegexOptions.IgnoreCase);
-
-            if (isMatch == false)
-            {
-                var errorObj = new
-                {
-                    devMsg = Entity.Properties.Resources.messageErrorEmailFormat,
-                    userMsg = Entity.Properties.Resources.messageErrorEmailFormat,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Message = Entity.Properties.Resources.messageErrorEmailFormat;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                _serviceResponse.Data = errorObj;
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorDuplicateIdentityEm;
                 return _serviceResponse;
             }
 

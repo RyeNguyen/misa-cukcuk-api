@@ -118,7 +118,7 @@ namespace MISA.ApplicationCore
                         //Kiểm tra thẻ thành viên
                         if (columnHeader == Entity.Properties.ImportScenarioVN.fieldNameCard)
                         {
-                            customer.MemberCard = itemToCheck?.ToString().Trim();
+                            customer.MemberCardCode = itemToCheck?.ToString().Trim();
                         }
 
                         //Kiểm tra nhóm khách hàng
@@ -224,38 +224,6 @@ namespace MISA.ApplicationCore
         /// Author: NQMinh (19/08/2021)
         protected override ServiceResponse ValidateCustom(Customer customer)
         {
-            //Check trùng mã:
-            var checkCode = CheckDuplicateCode(customer.CustomerCode);
-            if (checkCode == false)
-            {
-                var errorObj = new
-                {
-                    devMsg = Entity.Properties.Resources.messageErrorDuplicateCodeCus,
-                    userMsg = Entity.Properties.Resources.messageErrorDuplicateCodeCus,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Data = errorObj;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                _serviceResponse.Message = Entity.Properties.Resources.messageErrorDuplicateCodeCus;
-                return _serviceResponse;
-            }
-
-            //Check Email:
-            var isMatch = CheckEmailFormat(customer.Email);
-            if (isMatch == false)
-            {
-                var errorObj = new
-                {
-                    devMsg = Entity.Properties.Resources.messageErrorEmailFormat,
-                    userMsg = Entity.Properties.Resources.messageErrorEmailFormat,
-                    Code = MISACode.NotValid
-                };
-                _serviceResponse.Message = Entity.Properties.Resources.messageErrorEmailFormat;
-                _serviceResponse.MISACode = MISACode.NotValid;
-                _serviceResponse.Data = errorObj;
-                return _serviceResponse;
-            }
-
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }

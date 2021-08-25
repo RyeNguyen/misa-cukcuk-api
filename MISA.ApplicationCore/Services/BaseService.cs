@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MISA.ApplicationCore.Services
@@ -113,7 +114,7 @@ namespace MISA.ApplicationCore.Services
 
             //Thêm mới khi dữ liệu hợp lệ:
             var rowAffects = _baseRepository.Insert(entity);
-            _serviceResponse.Data = "Số bản ghi bị ảnh hưởng: " + rowAffects;
+            _serviceResponse.Data = rowAffects;
             _serviceResponse.Message = Entity.Properties.Resources.messageSuccessInsert;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
@@ -128,6 +129,12 @@ namespace MISA.ApplicationCore.Services
         /// Author: NQMinh (17/08/2021)
         public ServiceResponse Update(Guid entityId, MISAEntity entity)
         {
+            var commonValidate = ValidateCommon(entity);
+            if (commonValidate.MISACode == MISACode.NotValid) 
+            {
+                return commonValidate;
+            }
+
             var customValidate = ValidateCustom(entity);
             if (customValidate.MISACode == MISACode.NotValid)
             {
@@ -136,7 +143,7 @@ namespace MISA.ApplicationCore.Services
 
             //Sửa thông tin khi dữ liệu hợp lệ:
             var rowAffects = _baseRepository.Update(entityId, entity);
-            _serviceResponse.Data = "Số bản ghi bị ảnh hưởng: " + rowAffects;
+            _serviceResponse.Data = rowAffects;
             _serviceResponse.Message = Entity.Properties.Resources.messageSuccessUpdate;
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
@@ -150,7 +157,7 @@ namespace MISA.ApplicationCore.Services
         /// <param name="entityIds">Danh sách ID thực thể cần xóa</param>
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (16/08/2021)
-        public ServiceResponse Delete(List<Guid> entityIds)
+        public ServiceResponse Delete(List<string> entityIds)
         {
             var rowAffects = _baseRepository.Delete(entityIds);
             _serviceResponse.Data = rowAffects;          
@@ -168,16 +175,58 @@ namespace MISA.ApplicationCore.Services
         private ServiceResponse ValidateCommon(MISAEntity entity)
         {
             //Thực hiện validate:
-            //Bắt buộc nhập:
+            //1. Bắt buộc nhập:
+            var checkRequired = CheckRequired(entity);
+            if (checkRequired.MISACode == MISACode.NotValid)
+            {
+                return checkRequired;
+            }
+
+            //2. Check trùng mã:
+            var checkDuplicateCode = CheckDuplicateCode(entity);
+            if (checkDuplicateCode.MISACode == MISACode.NotValid)
+            {
+                return checkDuplicateCode;
+            }
+
+            //3. Check định dạng email:
+            var checkEmailFormat = CheckEmailFormat(entity);
+            if (checkEmailFormat.MISACode == MISACode.NotValid)
+            {
+                return checkEmailFormat;
+            }
+
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
+        }
+
+        /// <summary>
+        /// Phương thức kiểm tra dữ liệu riêng
+        /// </summary>
+        /// <param name="entity">Dữ liệu thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (18/08/2021)
+        protected virtual ServiceResponse ValidateCustom(MISAEntity entity)
+        {
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
+        }
+
+        /// <summary>
+        /// Phương thức kiểm tra các trường bắt buộc
+        /// </summary>
+        /// <param name="entity">Thông tin thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (24/08/2021)
+        private ServiceResponse CheckRequired(MISAEntity entity)
+        {
             //1. Lấy thông tin các property:
             var properties = typeof(MISAEntity).GetProperties();
 
             //2. Xác định việc validate dựa trên attribute: (MISARequired - check thông tin không được phép null hoặc trống)
-            foreach(var prop in properties)
+            foreach (var prop in properties)
             {
                 var propValue = prop.GetValue(entity);
-
-                var propName = prop.Name;
 
                 //Kiểm tra prop hiện tại có bắt buộc nhập hay không
                 var propMISARequired = prop.GetCustomAttributes(typeof(MISARequired), true);
@@ -193,19 +242,64 @@ namespace MISA.ApplicationCore.Services
                     }
                 }
             }
-
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
 
         /// <summary>
-        /// Phương thức kiểm tra dữ liệu riêng
+        /// Phương thức kiểm tra mã trùng
         /// </summary>
-        /// <param name="entity">Dữ liệu thực thể</param>
+        /// <param name="entity">Thông tin thực thể</param>
         /// <returns>Phản hồi tương ứng</returns>
-        /// Author: NQMinh (18/08/2021)
-        protected virtual ServiceResponse ValidateCustom(MISAEntity entity)
+        /// Author: NQMinh (24/08/2021)
+        private ServiceResponse CheckDuplicateCode(MISAEntity entity)
         {
+            var entityId = (Guid)entity.GetType().GetProperty($"{_className}Id").GetValue(entity);
+            var checkedEntity = _baseRepository.GetById(entityId);
+
+            var checkCode = _baseRepository.CheckDuplicateCode(entity.GetType().GetProperty($"{_className}Code").GetValue(entity).ToString());
+            if (checkCode == true && checkedEntity == null)
+            {
+                var errorObj = new
+                {
+                    devMsg = Entity.Properties.Resources.messageErrorDuplicateCode,
+                    userMsg = Entity.Properties.Resources.messageErrorDuplicateCode,
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Data = errorObj;
+                _serviceResponse.MISACode = MISACode.NotValid;
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorDuplicateCode;
+                return _serviceResponse;
+            }
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
+        }
+
+        /// <summary>
+        /// Phương thức kiểm tra định dạng email
+        /// </summary>
+        /// <param name="entity">Thông tin thực thể</param>
+        /// <returns>Phản hồi tương ứng</returns>
+        /// Author: NQMinh (24/08/2021)
+        private ServiceResponse CheckEmailFormat(MISAEntity entity)
+        {
+            var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+            var isMatch = Regex.IsMatch(entity.GetType().GetProperty("Email").GetValue(entity).ToString(), emailFormat, RegexOptions.IgnoreCase);
+
+            if (isMatch == false)
+            {
+                var errorObj = new
+                {
+                    devMsg = Entity.Properties.Resources.messageErrorEmailFormat,
+                    userMsg = Entity.Properties.Resources.messageErrorEmailFormat,
+                    Code = MISACode.NotValid
+                };
+                _serviceResponse.Message = Entity.Properties.Resources.messageErrorEmailFormat;
+                _serviceResponse.MISACode = MISACode.NotValid;
+                _serviceResponse.Data = errorObj;
+                return _serviceResponse;
+            }
             _serviceResponse.MISACode = MISACode.isValid;
             return _serviceResponse;
         }
