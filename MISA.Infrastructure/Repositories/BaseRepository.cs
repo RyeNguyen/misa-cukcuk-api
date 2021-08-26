@@ -135,7 +135,6 @@ namespace MISA.Infrastructure.Repositories
 
                     //Lấy kiểu dữ liệu của prop:
                     var propType = prop.PropertyType;
-
                     dynamicParams.Add($"@{propName}", propValue);
 
                     columnsName += $"{propName},";
@@ -182,17 +181,20 @@ namespace MISA.Infrastructure.Repositories
                     var propType = prop.PropertyType;
 
                     //Thêm param tương ứng với mỗi property của đối tượng:
-                    if (propName != $"{_className}Id" && propValue != null)
+                    if (propName != $"{_className}Id")
                     {
-                        dynamicParams.Add($"@{propName}", propValue);
-
-                        //queryString += $"{propName} = @{propName},";
+                        if (propValue != null)
+                        {
+                            dynamicParams.Add($"@{propName}", propValue);
+                        }
+                        else
+                        {
+                            dynamicParams.Add($"@{propName}");
+                        }
                     }
                 }
 
                 dynamicParams.Add($"@{_className}Id", entityId);
-
-                //queryString = queryString.Remove(queryString.Length - 1, 1);
 
                 var rowAffects = _dbConnection.Execute($"Proc_{_className}Update", param: dynamicParams, commandType: CommandType.StoredProcedure);
 
