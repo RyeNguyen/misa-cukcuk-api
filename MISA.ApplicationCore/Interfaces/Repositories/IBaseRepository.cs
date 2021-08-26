@@ -56,6 +56,8 @@ namespace MISA.ApplicationCore.Interfaces.Repositories
         /// Author: NQMinh (16/08/2021)
         int Delete(List<Guid> entityIds);
 
+        List<string> GetAllCode();
+
         /// <summary>
         /// Kiểm tra trùng mã
         /// </summary>

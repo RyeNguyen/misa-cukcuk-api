@@ -74,7 +74,7 @@ namespace MISA.CukCuk.Api.Controllers
             {
                 var entity = _baseService.GetById(entityId);
 
-                if (entity.MISACode == MISACode.isValid)
+                if (entity.Data != null)
                 {
                     return Ok(entity.Data);
                 }
@@ -84,6 +84,34 @@ namespace MISA.CukCuk.Api.Controllers
                 }
             }
             catch (Exception)
+            {
+                var errorObj = new
+                {
+                    devMsg = Entity.Properties.Resources.messageErrorGetById_Dev,
+                    userMsg = Entity.Properties.Resources.messageErrorGetById_User,
+                    Code = MISACode.NotValid
+                };
+                return BadRequest(errorObj);
+            }
+        }
+
+        [HttpGet("newCode")]
+        public IActionResult GetNewCode()
+        {
+            try
+            {
+                var newCode = _baseService.GetNewCode();
+
+                if (newCode.MISACode == MISACode.isValid)
+                {
+                    return Ok(newCode.Data);
+                }
+                else
+                {
+                    return NoContent();
+                }
+            }
+            catch
             {
                 var errorObj = new
                 {
@@ -161,12 +189,12 @@ namespace MISA.CukCuk.Api.Controllers
 
             if (deleteResult.MISACode == MISACode.NotValid)
             {
-                return BadRequest(deleteResult.Data);
+                return BadRequest(deleteResult);
             }
 
             if (deleteResult.MISACode == MISACode.isValid && (int)deleteResult.Data > 0)
             {
-                return StatusCode(200, Entity.Properties.Resources.messageSuccessDelete);
+                return StatusCode(200, deleteResult);
             }
             else
             {

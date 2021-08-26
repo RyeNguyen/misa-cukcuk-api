@@ -48,5 +48,7 @@ namespace MISA.ApplicationCore.Interfaces.Services
         /// <returns>Phản hồi tương ứng</returns>
         /// Author: NQMinh (16/08/2021)
         ServiceResponse Delete(List<Guid> entityIds);
+
+        ServiceResponse GetNewCode();
     }
 }

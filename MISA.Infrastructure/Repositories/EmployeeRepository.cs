@@ -36,6 +36,7 @@ namespace MISA.Infrastructure.Repositories
                 parameters.Add("@PositionId", positionId);
                 parameters.Add("@PageIndex", pageIndex);
                 parameters.Add("@PageSize", pageSize);
+
                 parameters.Add("@TotalRecord", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 parameters.Add("@TotalPage", dbType: DbType.Int32, direction: ParameterDirection.Output);
 

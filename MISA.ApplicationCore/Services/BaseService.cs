@@ -166,6 +166,32 @@ namespace MISA.ApplicationCore.Services
             return _serviceResponse;
         }
 
+        public ServiceResponse GetNewCode()
+        {
+            var codeList = _baseRepository.GetAllCode();
+
+            if (codeList is null)
+            {
+                _serviceResponse.MISACode = MISACode.NotValid;
+                _serviceResponse.Data = codeList;
+                _serviceResponse.Message = "Không thể lấy danh sách mã";
+                return _serviceResponse;
+            }
+
+            var codeDigitList = new List<int>();
+            foreach(var code in codeList)
+            {
+                var codeDigit = int.Parse(code[2..]);
+                codeDigitList.Add(codeDigit);
+            }
+
+            codeDigitList.Sort((x, y) => y.CompareTo(x));
+
+            _serviceResponse.Data = codeList[0].Substring(0, 2) + (codeDigitList[0] + 1).ToString();
+            _serviceResponse.MISACode = MISACode.isValid;
+            return _serviceResponse;
+        }
+
         /// <summary>
         /// Phương thức kiểm tra dữ liệu chung
         /// </summary>

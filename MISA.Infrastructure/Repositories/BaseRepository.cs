@@ -226,6 +226,16 @@ namespace MISA.Infrastructure.Repositories
                 return rowAffects;
             }
         }  
+
+        public List<string> GetAllCode()
+        {
+            using (_dbConnection = new MySqlConnection(_connectionString))
+            {
+                var codeList = _dbConnection.Query<string>($"Proc_{_className}GetAllCode", commandType: CommandType.StoredProcedure);
+
+                return codeList.ToList();
+            }
+        }
         
         /// <summary>
         /// Kiểm tra mã thực thể có bị trùng trong hệ thống không
